@@ -1,0 +1,4 @@
+com\capstone\controller\BookController.class
+com\capstone\ApiSpringApplication.class
+com\capstone\repository\BookRepository.class
+com\capstone\model\Book.class
