@@ -40,6 +40,7 @@ class TransactionModel extends Transaction {
     required super.bookId,
     required super.bookTitle,
     required super.borrowDate,
+    super.dueDate,
     super.returnDate,
     required super.status,
   });
@@ -50,6 +51,7 @@ class TransactionModel extends Transaction {
       bookId: json['bookId'] ?? 0,
       bookTitle: json['bookTitle'] ?? '',
       borrowDate: json['borrowDate'] ?? '',
+      dueDate: json['dueDate'],
       returnDate: json['returnDate'],
       status: json['status'] ?? 'UNKNOWN',
     );

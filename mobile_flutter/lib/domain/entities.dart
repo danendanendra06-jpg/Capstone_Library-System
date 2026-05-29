@@ -29,6 +29,7 @@ class Transaction {
   final int bookId;
   final String bookTitle;
   final String borrowDate;
+  final String? dueDate;
   final String? returnDate;
   final String status;
 
@@ -37,6 +38,7 @@ class Transaction {
     required this.bookId,
     required this.bookTitle,
     required this.borrowDate,
+    this.dueDate,
     this.returnDate,
     required this.status,
   });
