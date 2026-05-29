@@ -16,7 +16,7 @@
             </div>
         <?php endif; ?>
 
-        <form action="<?= isset($book) ? '/books/' . esc($book['id']) : '/books' ?>" method="post">
+        <form action="<?= isset($book) ? base_url('books/' . esc($book['id'])) : base_url('books') ?>" method="post">
             <?php if(isset($book)): ?>
                 <input type="hidden" name="_method" value="PUT">
             <?php endif; ?>
@@ -52,7 +52,7 @@
             </div>
             <hr class="mt-4 mb-4">
             <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save Book</button>
-            <a href="/books" class="btn btn-light ms-2">Cancel</a>
+            <a href="<?= base_url('books') ?>" class="btn btn-light ms-2">Cancel</a>
         </form>
     </div>
 </div>

@@ -3,16 +3,16 @@
 <?= $this->section('content') ?>
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4><?= esc($title) ?></h4>
-    <a href="/books/new" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add New Book</a>
+    <a href="<?= base_url('books/new') ?>" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add New Book</a>
 </div>
 
 <div class="card shadow-sm border-0 mb-4">
     <div class="card-body">
-        <form action="/books" method="get" class="mb-3 d-flex">
+        <form action="<?= base_url('books') ?>" method="get" class="mb-3 d-flex">
             <input type="text" name="search" class="form-control me-2" placeholder="Search by title, author, or ISBN..." value="<?= esc($search) ?>">
             <button type="submit" class="btn btn-outline-secondary">Search</button>
             <?php if($search): ?>
-                <a href="/books" class="btn btn-link">Clear</a>
+                <a href="<?= base_url('books') ?>" class="btn btn-link">Clear</a>
             <?php endif; ?>
         </form>
 
@@ -46,8 +46,8 @@
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <a href="/books/<?= esc($book['id']) ?>/edit" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                                    <form action="/books/<?= esc($book['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Delete this book?');">
+                                    <a href="<?= base_url('books/' . $book['id'] . '/edit') ?>" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                                    <form action="<?= base_url('books/' . $book['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Delete this book?');">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                                     </form>

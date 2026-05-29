@@ -17,13 +17,23 @@ class ReturnTransactionModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
-    public function getReturnsWithDetails()
+    public function getReturnsWithDetailsPaginated($search = '', $perPage = 10)
     {
-        return $this->select('return_transactions.*, borrow_transactions.user_id, borrow_transactions.book_id, users.username as member_name, books.title as book_title')
-                    ->join('borrow_transactions', 'borrow_transactions.id = return_transactions.borrow_id')
-                    ->join('users', 'users.id = borrow_transactions.user_id')
-                    ->join('books', 'books.id = borrow_transactions.book_id')
-                    ->orderBy('return_transactions.id', 'DESC')
-                    ->findAll();
+        $builder = $this->select('return_transactions.*, borrow_transactions.user_id, borrow_transactions.book_id, users.username as member_name, books.title as book_title')
+                        ->join('borrow_transactions', 'borrow_transactions.id = return_transactions.borrow_id')
+                        ->join('users', 'users.id = borrow_transactions.user_id')
+                        ->join('books', 'books.id = borrow_transactions.book_id');
+
+        if (!empty($search)) {
+            $builder->groupStart()
+                    ->like('users.username', $search)
+                    ->orLike('books.title', $search)
+                    ->groupEnd();
+        }
+
+        return [
+            'returns' => $builder->orderBy('return_transactions.id', 'DESC')->paginate($perPage),
+            'pager'   => $this->pager
+        ];
     }
 }

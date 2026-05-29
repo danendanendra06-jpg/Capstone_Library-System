@@ -21,37 +21,145 @@ class _HomeScreenState extends State<HomeScreen> {
     final cart = Provider.of<CartProvider>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Library Home')),
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        title: Text('Library', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications_none, color: Colors.black87),
+            onPressed: () {},
+          )
+        ],
+      ),
       body: bookProvider.isLoading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: bookProvider.books.length,
-              itemBuilder: (context, index) {
-                final book = bookProvider.books[index];
-                return BookCard(book: book, onAdd: () => cart.addToCart(book));
-              },
+          : RefreshIndicator(
+              onRefresh: () => bookProvider.loadBooks(),
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Discover', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black87)),
+                          Text('New and trending books', style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                          SizedBox(height: 24),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final book = bookProvider.books[index];
+                          return ModernBookCard(
+                            book: book,
+                            onAdd: () {
+                              cart.addToCart(book);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('${book.title} added to cart'),
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        childCount: bookProvider.books.length,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
     );
   }
 }
 
-class BookCard extends StatelessWidget {
+class ModernBookCard extends StatelessWidget {
   final Book book;
   final VoidCallback onAdd;
 
-  BookCard({required this.book, required this.onAdd});
+  ModernBookCard({required this.book, required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(8.0),
-      child: ListTile(
-        leading: Image.network(book.coverUrl, width: 50, fit: BoxFit.cover, errorBuilder: (_, __, ___) => Icon(Icons.book)),
-        title: Text(book.title),
-        subtitle: Text(book.author),
-        trailing: book.isAvailable
-            ? IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: onAdd)
-            : Text('Unavailable', style: TextStyle(color: Colors.red)),
+      margin: EdgeInsets.only(bottom: 16.0),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: 80,
+                height: 120,
+                color: Colors.grey[200],
+                child: book.coverUrl.isNotEmpty
+                    ? Image.network(book.coverUrl, fit: BoxFit.cover, errorBuilder: (_, __, ___) => Icon(Icons.book, size: 40, color: Colors.grey[400]))
+                    : Icon(Icons.book, size: 40, color: Colors.grey[400]),
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    book.title,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    book.author,
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      book.isAvailable
+                          ? Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(color: Colors.green[50], borderRadius: BorderRadius.circular(8)),
+                              child: Text('Available', style: TextStyle(color: Colors.green[700], fontSize: 12, fontWeight: FontWeight.bold)),
+                            )
+                          : Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(color: Colors.red[50], borderRadius: BorderRadius.circular(8)),
+                              child: Text('Checked Out', style: TextStyle(color: Colors.red[700], fontSize: 12, fontWeight: FontWeight.bold)),
+                            ),
+                      book.isAvailable
+                          ? FilledButton.tonal(
+                              onPressed: onAdd,
+                              style: FilledButton.styleFrom(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              ),
+                              child: Text('Borrow'),
+                            )
+                          : SizedBox.shrink(),
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

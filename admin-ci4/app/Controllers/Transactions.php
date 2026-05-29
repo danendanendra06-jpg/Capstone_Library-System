@@ -28,9 +28,14 @@ class Transactions extends BaseController
     // List all Borrow Transactions
     public function index()
     {
+        $search = $this->request->getVar('search') ?? '';
+        $transData = $this->borrowModel->getTransactionsWithDetailsPaginated($search, 10);
+
         $data = [
             'title'        => 'Borrow Transactions',
-            'transactions' => $this->borrowModel->getTransactionsWithDetails(),
+            'transactions' => $transData['transactions'],
+            'pager'        => $transData['pager'],
+            'search'       => $search
         ];
         return view('transactions/index', $data);
     }
@@ -38,11 +43,36 @@ class Transactions extends BaseController
     // List all Return Transactions
     public function returns()
     {
+        $search = $this->request->getVar('search') ?? '';
+        $returnData = $this->returnModel->getReturnsWithDetailsPaginated($search, 10);
+
         $data = [
             'title'   => 'Return Transactions',
-            'returns' => $this->returnModel->getReturnsWithDetails(),
+            'returns' => $returnData['returns'],
+            'pager'   => $returnData['pager'],
+            'search'  => $search
         ];
         return view('transactions/returns', $data);
+    }
+
+    // Detail view for a transaction
+    public function show($id = null)
+    {
+        $borrow = $this->borrowModel->select('borrow_transactions.*, users.username as member_name, books.title as book_title')
+                                    ->join('users', 'users.id = borrow_transactions.user_id')
+                                    ->join('books', 'books.id = borrow_transactions.book_id')
+                                    ->where('borrow_transactions.id', $id)
+                                    ->first();
+
+        if (!$borrow) {
+            return redirect()->to('/transactions')->with('error', 'Transaction not found.');
+        }
+
+        $data = [
+            'title'  => 'Transaction Details',
+            'borrow' => $borrow
+        ];
+        return view('transactions/show', $data);
     }
 
     // Create a new manual borrow

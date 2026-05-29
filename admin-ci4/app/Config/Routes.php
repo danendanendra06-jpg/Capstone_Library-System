@@ -20,6 +20,7 @@ $routes->group('', ['filter' => 'auth:admin'], static function($routes) {
     $routes->match(['GET', 'POST'], 'transactions/new', 'Transactions::create');
     $routes->get('transactions/returns', 'Transactions::returns');
     $routes->match(['GET', 'POST'], 'transactions/process_return/(:num)', 'Transactions::processReturn/$1');
+    $routes->get('transactions/(:num)', 'Transactions::show/$1');
     $routes->resource('fines');
     $routes->post('fines/mark_paid/(:num)', 'Fines::markPaid/$1');
     $routes->post('fines/mark_unpaid/(:num)', 'Fines::markUnpaid/$1');

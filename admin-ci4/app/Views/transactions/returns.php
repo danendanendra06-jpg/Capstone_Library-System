@@ -6,8 +6,22 @@
 </div>
 
 <?php if(session()->getFlashdata('success')): ?>
-    <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+    <div class="alert alert-success alert-dismissible fade show"><?= session()->getFlashdata('success') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 <?php endif; ?>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <form action="<?= base_url('transactions/returns') ?>" method="get" class="d-flex">
+            <input type="text" name="search" class="form-control me-2" placeholder="Search member or book..." value="<?= esc($search) ?>">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
+            <?php if(!empty($search)): ?>
+                <a href="<?= base_url('transactions/returns') ?>" class="btn btn-outline-secondary ms-2">Clear</a>
+            <?php endif; ?>
+        </form>
+    </div>
+</div>
 
 <div class="card shadow-sm border-0">
     <div class="card-body">
@@ -41,10 +55,13 @@
                     </tr>
                     <?php endforeach; ?>
                     <?php if(empty($returns)): ?>
-                        <tr><td colspan="6" class="text-center">No return transactions found.</td></tr>
+                        <tr><td colspan="6" class="text-center py-4 text-muted">No return transactions found.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
+        </div>
+        <div class="d-flex justify-content-end mt-3">
+            <?= $pager->links() ?>
         </div>
     </div>
 </div>
