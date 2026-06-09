@@ -35,4 +35,13 @@ class BorrowTransactionModel extends Model
             'pager'        => $this->pager
         ];
     }
+
+    public function getTransactionsWithDetails($limit = 5)
+    {
+        return $this->select('borrow_transactions.*, users.username as member_name, books.title as book_title')
+                    ->join('users', 'users.id = borrow_transactions.user_id')
+                    ->join('books', 'books.id = borrow_transactions.book_id')
+                    ->orderBy('borrow_transactions.id', 'DESC')
+                    ->findAll($limit);
+    }
 }
