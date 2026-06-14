@@ -33,6 +33,7 @@
                         <th>Username</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -50,16 +51,38 @@
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a href="<?= base_url('users/' . $u['id'] . '/edit') ?>" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                            <form action="<?= base_url('users/' . $u['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Delete this member?');">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                            </form>
+                            <?php 
+                                $status = $u['status'] ?? 'ACTIVE'; 
+                                if($status === 'ACTIVE'): 
+                            ?>
+                                <span class="badge bg-success">Active</span>
+                            <?php else: ?>
+                                <span class="badge bg-warning text-dark">Suspended</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if($u['role'] !== 'admin'): ?>
+                                <?php if($status === 'ACTIVE'): ?>
+                                    <form action="<?= base_url('users/' . $u['id'] . '/suspend') ?>" method="post" class="d-inline" onsubmit="return confirm('Suspend this member?');">
+                                        <button class="btn btn-sm btn-outline-warning" title="Suspend"><i class="bi bi-pause-circle"></i></button>
+                                    </form>
+                                <?php else: ?>
+                                    <form action="<?= base_url('users/' . $u['id'] . '/activate') ?>" method="post" class="d-inline" onsubmit="return confirm('Activate this member?');">
+                                        <button class="btn btn-sm btn-outline-success" title="Activate"><i class="bi bi-play-circle"></i></button>
+                                    </form>
+                                <?php endif; ?>
+                                <form action="<?= base_url('users/' . $u['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Delete this member?');">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                                </form>
+                            <?php else: ?>
+                                <span class="text-muted fst-italic">No actions</span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>
                     <?php if(empty($users)): ?>
-                        <tr><td colspan="5" class="text-center py-4 text-muted">No members found.</td></tr>
+                        <tr><td colspan="6" class="text-center py-4 text-muted">No members found.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>

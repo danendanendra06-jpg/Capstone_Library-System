@@ -14,6 +14,7 @@ public class FineService {
     private FineRepository repository;
 
     public Page<Fine> getAll(Pageable pageable) { return repository.findAll(pageable); }
+    public Page<Fine> getByUserId(Long userId, Pageable pageable) { return repository.findByUserId(userId, pageable); }
 
     public Fine getById(Long id) {
         return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Fine not found"));

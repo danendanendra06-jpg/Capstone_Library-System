@@ -14,6 +14,7 @@ public class ReviewService {
     private ReviewRepository repository;
 
     public Page<Review> getAll(Pageable pageable) { return repository.findAll(pageable); }
+    public Page<Review> getByBookId(Long bookId, Pageable pageable) { return repository.findByBookId(bookId, pageable); }
 
     public Review getById(Long id) {
         return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Review not found"));

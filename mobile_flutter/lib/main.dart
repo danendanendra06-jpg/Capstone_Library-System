@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'data/datasources.dart';
 import 'data/repositories_impl.dart';
+import 'domain/repositories.dart';
 import 'presentation/providers.dart';
 import 'presentation/screens/auth_screens.dart';
 import 'presentation/screens/main_screen.dart';
@@ -13,6 +14,10 @@ void main() {
   final authRepo = AuthRepositoryImpl(remoteDataSource);
   final bookRepo = BookRepositoryImpl(remoteDataSource);
   final txRepo = TransactionRepositoryImpl(remoteDataSource);
+  final categoryRepo = CategoryRepositoryImpl(remoteDataSource);
+  final notificationRepo = NotificationRepositoryImpl(remoteDataSource);
+  final fineRepo = FineRepositoryImpl(remoteDataSource);
+  final reviewRepo = ReviewRepositoryImpl(remoteDataSource);
 
   runApp(
     MultiProvider(
@@ -21,6 +26,10 @@ void main() {
         ChangeNotifierProvider(create: (_) => BookProvider(bookRepo)),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => TransactionProvider(txRepo)),
+        Provider<CategoryRepository>(create: (_) => categoryRepo),
+        Provider<NotificationRepository>(create: (_) => notificationRepo),
+        Provider<FineRepository>(create: (_) => fineRepo),
+        Provider<ReviewRepository>(create: (_) => reviewRepo),
       ],
       child: MyApp(),
     ),

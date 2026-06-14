@@ -140,34 +140,93 @@ class Transactions extends BaseController
         }
 
         // Fine Logic: Rp2000 per day
-        $fineAmount = $overdueDays * 2000;
+        $lateFine = $overdueDays * 2000;
 
         helper(['form']);
         if (strtolower((string)$this->request->getMethod()) === 'post') {
-            // Proceed with return
-            $this->returnModel->save([
-                'borrow_id'   => $id,
-                'return_date' => $currentDate,
-                'fine_amount' => $fineAmount,
+            $condition = $this->request->getPost('condition') ?? 'good';
+            $additionalFine = (float)($this->request->getPost('additional_fine') ?? 0);
+
+            $totalFine = $lateFine + $additionalFine;
+            $reason = "Overdue by {$overdueDays} days.";
+            if ($condition === 'damaged') {
+                $reason .= " Book was returned damaged.";
+            } elseif ($condition === 'lost') {
+                $reason .= " Book was lost.";
+            }
+
+            $returnCondition = strtoupper($condition);
+
+            // Update borrow status without fine_amount
+            $this->borrowModel->update($id, [
+                'status' => $condition === 'lost' ? 'LOST' : ($condition === 'damaged' ? 'DAMAGED' : 'RETURNED'),
+                'return_condition' => $returnCondition,
+                'late_days' => $overdueDays
             ]);
 
-            // Update borrow status
-            $this->borrowModel->update($id, ['status' => 'returned']);
+            // Add audit log
+            $auditModel = new \App\Models\AuditLogModel();
+            $auditModel->save([
+                'admin_username' => session()->get('username'),
+                'action' => 'RETURN_BOOK',
+                'details' => 'Processed return for borrow ID ' . $id . '. Condition: ' . $returnCondition . '. Total Fines Issued: Rp' . $totalFine
+            ]);
 
-            // Increase stock
-            $book = $this->bookModel->find($borrow['book_id']);
-            $this->bookModel->update($book['id'], ['stock' => $book['stock'] + 1]);
+            // Update stock (only if not lost)
+            if ($condition !== 'lost') {
+                $book = $this->bookModel->find($borrow['book_id']);
+                $this->bookModel->update($book['id'], ['stock' => $book['stock'] + 1]);
+            }
 
-            // Create fine if applicable
-            if ($fineAmount > 0) {
+            // Create fine for Late (if any)
+            if ($lateFine > 0) {
                 $this->fineModel->save([
                     'user_id'     => $borrow['user_id'],
                     'borrow_id'   => $id,
-                    'fine_amount' => $fineAmount,
-                    'reason'      => "Overdue by {$overdueDays} days",
-                    'status'      => 'unpaid'
+                    'amount'      => $lateFine,
+                    'reason'      => "Overdue by {$overdueDays} days.",
+                    'payment_status' => 'UNPAID',
+                    'fine_type'   => 'LATE'
                 ]);
-                return redirect()->to('/transactions/returns')->with('success', "Book returned successfully. A fine of Rp{$fineAmount} has been issued.");
+            }
+
+            // Create fine for Damaged / Lost (if any)
+            if ($additionalFine > 0) {
+                $fineType = ($condition === 'lost') ? 'LOST' : 'DAMAGED';
+                
+                $reasonStr = 'Book was returned damaged.';
+                if ($condition === 'lost') {
+                    $reasonStr = 'Book was lost.';
+                } elseif ($condition === 'damaged') {
+                    $dmgType = $this->request->getPost('damage_type') ?? 'Umum';
+                    $dmgNote = $this->request->getPost('damage_note') ?? '';
+                    $reasonStr = "Rusak ({$dmgType})";
+                    if (!empty(trim($dmgNote))) {
+                        $reasonStr .= " - " . trim($dmgNote);
+                    }
+                }
+                $this->fineModel->save([
+                    'user_id'     => $borrow['user_id'],
+                    'borrow_id'   => $id,
+                    'amount'      => $additionalFine,
+                    'reason'      => $reasonStr,
+                    'payment_status' => 'UNPAID',
+                    'fine_type'   => $fineType
+                ]);
+            }
+
+            // Create Notification if there is any fine
+            if ($totalFine > 0) {
+                $notifModel = new \App\Models\NotificationModel();
+                $notifModel->save([
+                    'user_id' => $borrow['user_id'],
+                    'title'   => 'Fine Issued',
+                    'message' => 'You have been issued fines totaling Rp' . number_format($totalFine, 0, ',', '.') . ' for your recent return. Please check your fines.',
+                    'is_read' => 0,
+                    'sent_at' => date('Y-m-d H:i:s')
+                ]);
+
+                return redirect()->to('/transactions/returns')->with('success', "Book returned successfully. Fines totaling Rp{$totalFine} have been issued.");
             }
 
             return redirect()->to('/transactions/returns')->with('success', 'Book returned successfully with no fine.');
@@ -178,7 +237,7 @@ class Transactions extends BaseController
             'title'       => 'Process Return',
             'borrow'      => $borrow,
             'overdueDays' => $overdueDays,
-            'fineAmount'  => $fineAmount,
+            'fineAmount'  => $lateFine,
             'currentDate' => $currentDate,
         ];
         return view('transactions/process_return', $data);

@@ -15,7 +15,6 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   final _screens = [
     HomeScreen(),
-    SearchScreen(),
     CartScreen(),
     ProfileScreen(),
   ];
@@ -24,43 +23,37 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_currentIndex],
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        child: Stack(
-          children: [
-            Icon(Icons.collections_bookmark, color: Colors.white),
-            Consumer<CartProvider>(
-              builder: (_, cart, __) => cart.cart.isNotEmpty
-                  ? Positioned(
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (i) => setState(() => _currentIndex = i),
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blueAccent,
+        unselectedItemColor: Colors.grey,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Consumer<CartProvider>(
+              builder: (_, cart, __) => Stack(
+                children: [
+                  Icon(Icons.shopping_cart_outlined),
+                  if (cart.cart.isNotEmpty)
+                    Positioned(
                       right: 0,
                       top: 0,
-                      child: CircleAvatar(
-                        radius: 6,
-                        backgroundColor: Colors.red,
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                        constraints: BoxConstraints(minWidth: 12, minHeight: 12),
+                        child: Text('${cart.cart.length}', style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                       ),
-                    )
-                  : SizedBox.shrink(),
+                    ),
+                ],
+              ),
             ),
-          ],
-        ),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => CartScreen()));
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex == 3 ? 2 : (_currentIndex > 2 ? _currentIndex - 1 : _currentIndex),
-        onTap: (i) {
-          if (i == 2) {
-            setState(() => _currentIndex = 3);
-          } else {
-            setState(() => _currentIndex = i);
-          }
-        },
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+            activeIcon: Icon(Icons.shopping_cart),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );

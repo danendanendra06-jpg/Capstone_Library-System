@@ -14,24 +14,32 @@ public class Fine {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "return_id")
-    private ReturnTransaction returnTransaction;
+    @ManyToOne
+    @JoinColumn(name = "borrow_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private BorrowTransaction borrowTransaction;
+
+    @Column(name = "fine_type")
+    private String fineType; // LATE, DAMAGED, LOST
+
+    @Column(name = "payment_status")
+    private String paymentStatus = "UNPAID"; // UNPAID, PAID
 
     private BigDecimal amount;
     private String reason;
-    private Boolean isPaid;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
-    public ReturnTransaction getReturnTransaction() { return returnTransaction; }
-    public void setReturnTransaction(ReturnTransaction returnTransaction) { this.returnTransaction = returnTransaction; }
+    public BorrowTransaction getBorrowTransaction() { return borrowTransaction; }
+    public void setBorrowTransaction(BorrowTransaction borrowTransaction) { this.borrowTransaction = borrowTransaction; }
     public BigDecimal getAmount() { return amount; }
     public void setAmount(BigDecimal amount) { this.amount = amount; }
     public String getReason() { return reason; }
     public void setReason(String reason) { this.reason = reason; }
-    public Boolean getIsPaid() { return isPaid; }
-    public void setIsPaid(Boolean isPaid) { this.isPaid = isPaid; }
+    public String getFineType() { return fineType; }
+    public void setFineType(String fineType) { this.fineType = fineType; }
+    public String getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
 }

@@ -18,6 +18,7 @@ C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\dto\BookDTO.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\controller\CartController.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\service\CartService.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\model\Cart.java
+C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\repository\AuditLogRepository.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\service\BookService.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\model\Notification.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\controller\AuthController.java
@@ -30,6 +31,7 @@ C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\service\ReturnTra
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\controller\BookController.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\controller\CategoryController.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\exception\ResourceNotFoundException.java
+C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\model\AuditLog.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\model\ReturnTransaction.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\controller\FineController.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\dto\SignupRequest.java

@@ -18,7 +18,16 @@ public class BookService {
     @Autowired
     private BookRepository repository;
 
-    public Page<Book> getAll(Pageable pageable) { return repository.findAll(pageable); }
+    public Page<Book> getAll(Long categoryId, Pageable pageable) {
+        if (categoryId != null) {
+            return repository.findByCategoryId(categoryId, pageable);
+        }
+        return repository.findAll(pageable);
+    }
+    
+    public Page<Book> getPopularBooks(Pageable pageable) {
+        return repository.findPopularBooks(pageable);
+    }
     
     public Page<Book> searchBooks(String keyword, Pageable pageable) {
         Specification<Book> spec = (root, query, cb) -> {

@@ -10,11 +10,31 @@ abstract class AuthRepository {
 
 abstract class BookRepository {
   Future<List<Book>> getBooks();
+  Future<List<Book>> getPopularBooks();
+  Future<List<Book>> getBooksByCategory(int categoryId);
   Future<List<Book>> searchBooks(String query);
   Future<Book> getBookDetails(int id);
 }
 
 abstract class TransactionRepository {
-  Future<void> borrowBook(int bookId);
+  Future<void> borrowBook(int bookId, {String? dueDate});
   Future<List<Transaction>> getTransactions();
+}
+
+abstract class CategoryRepository {
+  Future<List<Category>> getCategories();
+}
+
+abstract class NotificationRepository {
+  Future<List<Notification>> getNotifications();
+}
+
+abstract class FineRepository {
+  Future<List<Fine>> getFines();
+  Future<bool> payFine(int id, String method, double amount);
+}
+
+abstract class ReviewRepository {
+  Future<List<Review>> getReviews(int bookId);
+  Future<void> submitReview(int bookId, int rating, String comment);
 }

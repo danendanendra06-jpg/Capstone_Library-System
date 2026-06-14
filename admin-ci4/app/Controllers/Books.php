@@ -75,6 +75,10 @@ class Books extends BaseController
             'author' => $this->request->getPost('author'),
             'category_id' => $this->request->getPost('category_id'),
             'isbn' => $this->request->getPost('isbn'),
+            'publisher' => $this->request->getPost('publisher'),
+            'publication_year' => $this->request->getPost('publication_year'),
+            'shelf_location' => $this->request->getPost('shelf_location'),
+            'price' => $this->request->getPost('price'),
             'stock' => $this->request->getPost('stock'),
         ]);
 
@@ -112,6 +116,10 @@ class Books extends BaseController
             'author' => $this->request->getPost('author'),
             'category_id' => $this->request->getPost('category_id'),
             'isbn' => $this->request->getPost('isbn'),
+            'publisher' => $this->request->getPost('publisher'),
+            'publication_year' => $this->request->getPost('publication_year'),
+            'shelf_location' => $this->request->getPost('shelf_location'),
+            'price' => $this->request->getPost('price'),
             'stock' => $this->request->getPost('stock'),
         ]);
 

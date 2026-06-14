@@ -42,13 +42,54 @@
             </div>
         </div>
     </div>
-
+    
     <div class="col-md-3">
-        <div class="card border-0 shadow-sm h-100 overflow-hidden" style="background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);">
+        <div class="card border-0 shadow-sm h-100 overflow-hidden" style="background: linear-gradient(135deg, #fccb90 0%, #d57eeb 100%);">
             <div class="card-body p-4 position-relative">
-                <i class="bi bi-cash-stack position-absolute text-white opacity-25" style="font-size: 5rem; right: -10px; bottom: -20px;"></i>
-                <p class="mb-1 text-white text-uppercase fw-semibold" style="letter-spacing: 1px; font-size: 0.8rem;">Unpaid Fines</p>
-                <h2 class="mb-0 fw-bold fs-2 text-white">Rp <?= number_format($total_fines, 0, ',', '.') ?></h2>
+                <i class="bi bi-person-x-fill position-absolute text-white opacity-25" style="font-size: 5rem; right: -10px; bottom: -20px;"></i>
+                <p class="mb-1 text-white text-uppercase fw-semibold" style="letter-spacing: 1px; font-size: 0.8rem;">Members Penalized</p>
+                <h2 class="mb-0 fw-bold display-5 text-white"><?= number_format($members_penalized) ?></h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-0 pt-4 pb-2">
+                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-star-fill text-warning me-2"></i> Popular Books (Top 5)</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    <?php foreach($popular_books as $pb): ?>
+                    <div class="list-group-item border-0 py-3 px-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-bold text-dark"><?= esc($pb['title']) ?></h6>
+                            <span class="badge bg-primary rounded-pill"><?= esc($pb['borrow_count']) ?> borrows</span>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-0 pt-4 pb-2">
+                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-trophy-fill text-success me-2"></i> Active Members (Top 5)</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    <?php foreach($active_members as $am): ?>
+                    <div class="list-group-item border-0 py-3 px-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-bold text-dark"><?= esc($am['username']) ?></h6>
+                            <span class="badge bg-success rounded-pill"><?= esc($am['borrow_count']) ?> borrows</span>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
     </div>
@@ -89,12 +130,14 @@
                                 <small class="text-muted"><i class="bi bi-person me-1"></i><?= esc($b['member_name']) ?> &bull; <?= esc($b['borrow_date']) ?></small>
                             </div>
                             <div>
-                                <?php if($b['status'] === 'borrowed'): ?>
+                                <?php if(strtoupper($b['status']) === 'BORROWED'): ?>
                                     <span class="badge bg-warning bg-opacity-25 text-warning-emphasis rounded-pill px-3 py-2 border border-warning-subtle">Active</span>
-                                <?php elseif($b['status'] === 'returned'): ?>
+                                <?php elseif(strtoupper($b['status']) === 'RETURNED'): ?>
                                     <span class="badge bg-success bg-opacity-25 text-success-emphasis rounded-pill px-3 py-2 border border-success-subtle">Returned</span>
-                                <?php else: ?>
-                                    <span class="badge bg-danger bg-opacity-25 text-danger-emphasis rounded-pill px-3 py-2 border border-danger-subtle">Overdue</span>
+                                <?php elseif(strtoupper($b['status']) === 'DAMAGED'): ?>
+                                    <span class="badge bg-danger bg-opacity-25 text-danger-emphasis rounded-pill px-3 py-2 border border-danger-subtle">Damaged</span>
+                                <?php elseif(strtoupper($b['status']) === 'LOST'): ?>
+                                    <span class="badge bg-dark bg-opacity-25 text-dark-emphasis rounded-pill px-3 py-2 border border-dark-subtle">Lost</span>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -132,15 +175,11 @@ document.addEventListener("DOMContentLoaded", function() {
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Total Books', 'Members', 'Active Borrows'],
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [{
-                label: 'Library Statistics',
-                data: [
-                    <?= esc($total_books) ?>, 
-                    <?= esc($total_users) ?>, 
-                    <?= esc($active_loans) ?>
-                ],
-                backgroundColor: [gradientBooks, gradientMembers, gradientBorrows],
+                label: 'Borrows per Month',
+                data: <?= json_encode($monthly_data) ?>,
+                backgroundColor: gradientBooks,
                 borderRadius: 8,
                 borderSkipped: false,
                 barPercentage: 0.6

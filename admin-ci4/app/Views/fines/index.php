@@ -48,9 +48,9 @@
                         <td>#<?= esc($fine['id']) ?></td>
                         <td><?= esc($fine['member_name']) ?></td>
                         <td><?= esc($fine['book_title']) ?></td>
-                        <td class="fw-bold">Rp<?= number_format($fine['fine_amount'], 0, ',', '.') ?></td>
+                        <td class="fw-bold">Rp<?= number_format($fine['amount'], 0, ',', '.') ?></td>
                         <td>
-                            <?php if($fine['status'] === 'paid'): ?>
+                            <?php if($fine['payment_status'] === 'PAID'): ?>
                                 <span class="badge bg-success"><i class="bi bi-check-circle"></i> Paid</span>
                             <?php else: ?>
                                 <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Unpaid</span>
@@ -58,7 +58,7 @@
                         </td>
                         <td>
                             <a href="<?= base_url('fines/' . $fine['id']) ?>" class="btn btn-sm btn-info text-white"><i class="bi bi-eye"></i> View</a>
-                            <?php if($fine['status'] === 'unpaid'): ?>
+                            <?php if($fine['payment_status'] === 'UNPAID'): ?>
                                 <form action="<?= base_url('fines/mark_paid/' . $fine['id']) ?>" method="post" class="d-inline">
                                     <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Mark this fine as paid?');"><i class="bi bi-cash"></i> Pay</button>
                                 </form>

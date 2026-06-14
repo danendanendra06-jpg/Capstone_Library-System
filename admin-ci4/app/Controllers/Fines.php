@@ -53,7 +53,16 @@ class Fines extends BaseController
                 return redirect()->to('/fines')->with('error', 'Fine not found.');
             }
 
-            $this->fineModel->update($id, ['status' => 'paid']);
+            $this->fineModel->update($id, ['payment_status' => 'PAID']);
+            
+            // Add audit log
+            $auditModel = new \App\Models\AuditLogModel();
+            $auditModel->save([
+                'admin_username' => session()->get('username'),
+                'action' => 'UPDATE_FINE',
+                'details' => 'Marked fine ID ' . $id . ' as PAID.'
+            ]);
+
             return redirect()->back()->with('success', 'Fine marked as paid.');
         }
         return redirect()->to('/fines');
@@ -67,7 +76,16 @@ class Fines extends BaseController
                 return redirect()->to('/fines')->with('error', 'Fine not found.');
             }
 
-            $this->fineModel->update($id, ['status' => 'unpaid']);
+            $this->fineModel->update($id, ['payment_status' => 'UNPAID']);
+            
+            // Add audit log
+            $auditModel = new \App\Models\AuditLogModel();
+            $auditModel->save([
+                'admin_username' => session()->get('username'),
+                'action' => 'UPDATE_FINE',
+                'details' => 'Marked fine ID ' . $id . ' as UNPAID.'
+            ]);
+
             return redirect()->back()->with('success', 'Fine marked as unpaid.');
         }
         return redirect()->to('/fines');

@@ -11,7 +11,7 @@ class BookModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
-    protected $allowedFields = ['title', 'author', 'category_id', 'isbn', 'stock', 'cover_image'];
+    protected $allowedFields = ['title', 'author', 'category_id', 'isbn', 'publisher', 'publication_year', 'shelf_location', 'price', 'stock', 'cover_image'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';

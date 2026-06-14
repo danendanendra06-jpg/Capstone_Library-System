@@ -16,7 +16,10 @@ public class ReviewController {
     private ReviewService service;
 
     @GetMapping
-    public ResponseEntity<Page<Review>> getAll(Pageable pageable) {
+    public ResponseEntity<Page<Review>> getAll(@RequestParam(required = false) Long bookId, Pageable pageable) {
+        if (bookId != null) {
+            return ResponseEntity.ok(service.getByBookId(bookId, pageable));
+        }
         return ResponseEntity.ok(service.getAll(pageable));
     }
 

@@ -26,22 +26,45 @@ class Users extends BaseController
         return view('users/index', $data);
     }
 
-    public function edit($id = null) {
-        $data = [
-            'title' => 'Edit Member Role', 
-            'user'  => $this->userModel->find($id)
-        ];
-        if (!$data['user']) throw new \CodeIgniter\Exceptions\PageNotFoundException('User not found');
-        return view('users/form', $data);
+    public function suspend($id = null) {
+        $user = $this->userModel->find($id);
+        if ($user && $user['role'] !== 'admin') {
+            $this->userModel->update($id, ['status' => 'SUSPENDED']);
+            
+            // Add audit log
+            $auditModel = new \App\Models\AuditLogModel();
+            $auditModel->save([
+                'admin_username' => session()->get('username'),
+                'action' => 'SUSPEND_MEMBER',
+                'details' => 'Suspended member: ' . $user['username']
+            ]);
+        }
+        return redirect()->to('/users')->with('success', 'User suspended successfully.');
     }
 
-    public function update($id = null) {
-        $this->userModel->update($id, ['role' => $this->request->getPost('role')]);
-        return redirect()->to('/users')->with('success', 'User role updated successfully.');
+    public function activate($id = null) {
+        $user = $this->userModel->find($id);
+        if ($user) {
+            $this->userModel->update($id, ['status' => 'ACTIVE']);
+            
+            // Add audit log
+            $auditModel = new \App\Models\AuditLogModel();
+            $auditModel->save([
+                'admin_username' => session()->get('username'),
+                'action' => 'ACTIVATE_MEMBER',
+                'details' => 'Activated member: ' . $user['username']
+            ]);
+        }
+        return redirect()->to('/users')->with('success', 'User activated successfully.');
     }
 
     public function delete($id = null) {
-        $this->userModel->delete($id);
+        $user = $this->userModel->find($id);
+        if ($user && $user['role'] !== 'admin') {
+            $this->userModel->delete($id);
+        } else {
+            return redirect()->to('/users')->with('error', 'Cannot delete admin user.');
+        }
         return redirect()->to('/users')->with('success', 'User deleted successfully.');
     }
 }

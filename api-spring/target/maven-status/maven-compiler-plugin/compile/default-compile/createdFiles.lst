@@ -8,6 +8,7 @@ com\capstone\controller\CategoryController.class
 com\capstone\security\JwtUtil.class
 com\capstone\controller\CartItemController.class
 com\capstone\dto\BorrowTransactionDTO.class
+com\capstone\controller\FineController$PaymentRequest.class
 com\capstone\model\ReturnTransaction.class
 com\capstone\controller\ReviewController.class
 com\capstone\repository\ReturnTransactionRepository.class
@@ -38,10 +39,13 @@ com\capstone\dto\FineDTO.class
 com\capstone\model\Category.class
 com\capstone\config\SecurityConfig.class
 com\capstone\controller\ProfileController.class
+com\capstone\model\AuditLog.class
 com\capstone\repository\CartRepository.class
 com\capstone\model\Fine.class
 com\capstone\model\Role.class
+com\capstone\repository\AuditLogRepository.class
 com\capstone\dto\CategoryDTO.class
+com\capstone\controller\FineController$PaymentResponse.class
 com\capstone\dto\ReturnTransactionDTO.class
 com\capstone\repository\ReviewRepository.class
 com\capstone\ApiSpringApplication.class

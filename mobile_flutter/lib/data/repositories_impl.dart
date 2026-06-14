@@ -52,6 +52,12 @@ class BookRepositoryImpl implements BookRepository {
   Future<List<Book>> getBooks() => remoteDataSource.getBooks();
 
   @override
+  Future<List<Book>> getPopularBooks() => remoteDataSource.getPopularBooks();
+
+  @override
+  Future<List<Book>> getBooksByCategory(int categoryId) => remoteDataSource.getBooksByCategory(categoryId);
+
+  @override
   Future<List<Book>> searchBooks(String query) => remoteDataSource.searchBooks(query);
 
   @override
@@ -64,8 +70,40 @@ class TransactionRepositoryImpl implements TransactionRepository {
   TransactionRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<void> borrowBook(int bookId) => remoteDataSource.borrowBook(bookId);
+  Future<void> borrowBook(int bookId, {String? dueDate}) => remoteDataSource.borrowBook(bookId, dueDate: dueDate);
 
   @override
   Future<List<Transaction>> getTransactions() => remoteDataSource.getTransactions();
+}
+
+class CategoryRepositoryImpl implements CategoryRepository {
+  final RemoteDataSource remoteDataSource;
+  CategoryRepositoryImpl(this.remoteDataSource);
+  @override
+  Future<List<Category>> getCategories() => remoteDataSource.getCategories();
+}
+
+class NotificationRepositoryImpl implements NotificationRepository {
+  final RemoteDataSource remoteDataSource;
+  NotificationRepositoryImpl(this.remoteDataSource);
+  @override
+  Future<List<Notification>> getNotifications() => remoteDataSource.getNotifications();
+}
+
+class FineRepositoryImpl implements FineRepository {
+  final RemoteDataSource remoteDataSource;
+  FineRepositoryImpl(this.remoteDataSource);
+  @override
+  Future<List<Fine>> getFines() => remoteDataSource.getFines();
+  @override
+  Future<bool> payFine(int id, String method, double amount) => remoteDataSource.payFine(id, method, amount);
+}
+
+class ReviewRepositoryImpl implements ReviewRepository {
+  final RemoteDataSource remoteDataSource;
+  ReviewRepositoryImpl(this.remoteDataSource);
+  @override
+  Future<List<Review>> getReviews(int bookId) => remoteDataSource.getReviews(bookId);
+  @override
+  Future<void> submitReview(int bookId, int rating, String comment) => remoteDataSource.submitReview(bookId, rating, comment);
 }

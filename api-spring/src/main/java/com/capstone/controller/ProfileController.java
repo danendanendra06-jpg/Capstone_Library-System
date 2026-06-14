@@ -29,4 +29,39 @@ public class ProfileController {
         }
         return ResponseEntity.status(401).build();
     }
+
+    @PutMapping
+    public ResponseEntity<?> updateProfile(@org.springframework.web.bind.annotation.RequestBody java.util.Map<String, String> payload) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String username = ((UserDetails) principal).getUsername();
+            User user = userRepository.findByUsername(username).orElse(null);
+            if (user != null) {
+                if (payload.containsKey("email")) user.setEmail(payload.get("email"));
+                // Can't update username easily because it's used in JWT, but let's allow it if we want.
+                // Or just name if user has a name field. Wait, User only has username and email.
+                userRepository.save(user);
+                return ResponseEntity.ok(user);
+            }
+        }
+        return ResponseEntity.status(401).build();
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<?> updatePassword(@org.springframework.web.bind.annotation.RequestBody java.util.Map<String, String> payload, @Autowired org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String username = ((UserDetails) principal).getUsername();
+            User user = userRepository.findByUsername(username).orElse(null);
+            if (user != null) {
+                String newPassword = payload.get("password");
+                if (newPassword != null && !newPassword.isEmpty()) {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    userRepository.save(user);
+                    return ResponseEntity.ok().body("{\"message\": \"Password updated successfully\"}");
+                }
+            }
+        }
+        return ResponseEntity.status(401).build();
+    }
 }

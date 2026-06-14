@@ -13,7 +13,7 @@
             <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
         <?php endif; ?>
 
-        <form action="<?= base_url('transactions') ?>" method="post">
+        <form action="<?= base_url('transactions/new') ?>" method="post">
             <div class="mb-3">
                 <label>Member</label>
                 <select name="user_id" class="form-select" required>

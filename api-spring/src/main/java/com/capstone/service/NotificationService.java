@@ -14,6 +14,7 @@ public class NotificationService {
     private NotificationRepository repository;
 
     public Page<Notification> getAll(Pageable pageable) { return repository.findAll(pageable); }
+    public Page<Notification> getByUserId(Long userId, Pageable pageable) { return repository.findByUserId(userId, pageable); }
 
     public Notification getById(Long id) {
         return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Notification not found"));

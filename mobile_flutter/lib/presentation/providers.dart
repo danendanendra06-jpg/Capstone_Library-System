@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../domain/entities.dart';
 import '../domain/repositories.dart';
 
@@ -46,6 +48,7 @@ class AuthProvider extends ChangeNotifier {
       await repository.register(name, email, password);
       return true;
     } catch (e) {
+      print('Registration Error: $e');
       return false;
     } finally {
       isLoading = false;
@@ -59,21 +62,44 @@ class AuthProvider extends ChangeNotifier {
     user = null;
     notifyListeners();
   }
+
+  Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
 }
 
 class BookProvider extends ChangeNotifier {
   final BookRepository repository;
-  List<Book> books = [];
+  List<Book> books = []; // Let's use this as latestBooks
+  List<Book> popularBooks = [];
   List<Book> searchResults = [];
   bool isLoading = false;
 
   BookProvider(this.repository);
 
-  Future<void> loadBooks() async {
+  Future<void> loadBooks({int? categoryId}) async {
     isLoading = true;
     notifyListeners();
     try {
-      books = await repository.getBooks();
+      if (categoryId != null) {
+        books = await repository.getBooksByCategory(categoryId);
+      } else {
+        books = await repository.getBooks();
+      }
+    } catch (e) {
+      // Handle error
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadPopularBooks() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      popularBooks = await repository.getPopularBooks();
     } catch (e) {
       // Handle error
     } finally {
@@ -138,16 +164,19 @@ class TransactionProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> checkout(List<Book> cart) async {
+  Future<String?> checkout(List<Book> cart, {String? dueDate}) async {
     isLoading = true;
     notifyListeners();
     try {
       for (var book in cart) {
-        await repository.borrowBook(book.id);
+        await repository.borrowBook(book.id, dueDate: dueDate);
       }
-      return true;
+      return null;
     } catch (e) {
-      return false;
+      if (e is DioException && e.response?.data != null && e.response?.data['message'] != null) {
+        return e.response?.data['message'];
+      }
+      return e.toString();
     } finally {
       isLoading = false;
       notifyListeners();

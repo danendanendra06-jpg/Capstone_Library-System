@@ -16,8 +16,24 @@ public class NotificationController {
     @Autowired
     private NotificationService service;
 
+    @Autowired
+    private com.capstone.repository.UserRepository userRepo;
+
+    private com.capstone.model.User getCurrentUser() {
+        Object principal = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof org.springframework.security.core.userdetails.UserDetails) {
+            String username = ((org.springframework.security.core.userdetails.UserDetails) principal).getUsername();
+            return userRepo.findByUsername(username).orElse(null);
+        }
+        return null;
+    }
+
     @GetMapping
     public ResponseEntity<Page<Notification>> getAll(Pageable pageable) {
+        com.capstone.model.User user = getCurrentUser();
+        if (user != null) {
+            return ResponseEntity.ok(service.getByUserId(user.getId(), pageable));
+        }
         return ResponseEntity.ok(service.getAll(pageable));
     }
 

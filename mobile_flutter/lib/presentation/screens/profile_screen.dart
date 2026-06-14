@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers.dart';
 import 'transactions_screen.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -17,8 +18,10 @@ class ProfileScreen extends StatelessWidget {
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(Icons.settings_outlined, color: Colors.black87),
-            onPressed: () {},
+            icon: Icon(Icons.edit_outlined, color: Colors.black87),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => EditProfileScreen()));
+            },
           )
         ],
       ),
@@ -88,18 +91,6 @@ class ProfileScreen extends StatelessWidget {
                                 title: Text('Borrowing History', style: TextStyle(fontWeight: FontWeight.w600)),
                                 trailing: Icon(Icons.chevron_right, color: Colors.grey),
                                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => TransactionsScreen())),
-                              ),
-                              Divider(height: 1, indent: 70, endIndent: 20),
-                              ListTile(
-                                contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                                leading: Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(color: Colors.purple[50], borderRadius: BorderRadius.circular(12)),
-                                  child: Icon(Icons.bookmark_outline, color: Colors.purple),
-                                ),
-                                title: Text('Saved Books', style: TextStyle(fontWeight: FontWeight.w600)),
-                                trailing: Icon(Icons.chevron_right, color: Colors.grey),
-                                onTap: () {},
                               ),
                             ],
                           ),

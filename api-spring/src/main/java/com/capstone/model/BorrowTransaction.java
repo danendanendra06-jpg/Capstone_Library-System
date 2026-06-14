@@ -22,7 +22,16 @@ public class BorrowTransaction {
     @Column(name = "due_date")
     private Date expectedReturnDate;
     
-    private String status; // BORROWED, RETURNED, OVERDUE
+    private String status; // BORROWED, RETURNED, DAMAGED, LOST
+    
+    @Column(name = "return_condition")
+    private String returnCondition; // GOOD, DAMAGED, LOST
+    
+    @Column(name = "late_days")
+    private Integer lateDays = 0;
+    
+    @Transient
+    private Double fineAmount = 0.0;
 
     @PrePersist
     protected void onCreate() { borrowDate = new Date(); }
@@ -39,4 +48,18 @@ public class BorrowTransaction {
     public void setExpectedReturnDate(Date expectedReturnDate) { this.expectedReturnDate = expectedReturnDate; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    public String getReturnCondition() { return returnCondition; }
+    public void setReturnCondition(String returnCondition) { this.returnCondition = returnCondition; }
+    public Integer getLateDays() { return lateDays; }
+    public void setLateDays(Integer lateDays) { this.lateDays = lateDays; }
+    @OneToMany(mappedBy = "borrowTransaction", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private java.util.List<Fine> fines;
+
+    public Double getFineAmount() { 
+        if (fines == null || fines.isEmpty()) return 0.0;
+        return fines.stream()
+            .map(f -> f.getAmount().doubleValue())
+            .reduce(0.0, Double::sum);
+    }
+    public void setFineAmount(Double fineAmount) { this.fineAmount = fineAmount; }
 }

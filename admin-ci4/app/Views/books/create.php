@@ -30,7 +30,7 @@
                     <label class="form-label">Author</label>
                     <input type="text" name="author" class="form-control" value="<?= old('author', $book['author'] ?? '') ?>" required>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label class="form-label">Category</label>
                     <select name="category_id" class="form-select" required>
                         <option value="">Select Category...</option>
@@ -41,9 +41,25 @@
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label class="form-label">ISBN</label>
                     <input type="text" name="isbn" class="form-control" value="<?= old('isbn', $book['isbn'] ?? '') ?>">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Publisher</label>
+                    <input type="text" name="publisher" class="form-control" value="<?= old('publisher', $book['publisher'] ?? '') ?>">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Publication Year</label>
+                    <input type="number" name="publication_year" class="form-control" value="<?= old('publication_year', $book['publication_year'] ?? '') ?>">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Shelf Location</label>
+                    <input type="text" name="shelf_location" class="form-control" value="<?= old('shelf_location', $book['shelf_location'] ?? '') ?>">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Price (IDR)</label>
+                    <input type="number" step="0.01" name="price" class="form-control" value="<?= old('price', $book['price'] ?? '') ?>">
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Stock Quantity</label>

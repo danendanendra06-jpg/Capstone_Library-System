@@ -11,7 +11,7 @@ class FineModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
-    protected $allowedFields = ['user_id', 'borrow_id', 'fine_amount', 'reason', 'status'];
+    protected $allowedFields = ['user_id', 'borrow_id', 'amount', 'reason', 'payment_status', 'fine_type'];
     protected $useTimestamps = true;
 
     public function getFinesPaginated($search = '', $perPage = 10)

@@ -16,11 +16,18 @@ public class BookController {
     private BookService service;
 
     @GetMapping
-    public ResponseEntity<Page<Book>> getAll(@RequestParam(required = false) String title, Pageable pageable) {
+    public ResponseEntity<Page<Book>> getAll(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String sortCustom,
+            Pageable pageable) {
         if (title != null && !title.isEmpty()) {
             return ResponseEntity.ok(service.searchBooks(title, pageable));
         }
-        return ResponseEntity.ok(service.getAll(pageable));
+        if ("popular".equalsIgnoreCase(sortCustom)) {
+            return ResponseEntity.ok(service.getPopularBooks(pageable));
+        }
+        return ResponseEntity.ok(service.getAll(categoryId, pageable));
     }
 
     @GetMapping("/{id}")

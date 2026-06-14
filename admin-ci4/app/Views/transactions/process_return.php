@@ -25,10 +25,56 @@
             </div>
         <?php endif; ?>
 
-        <form action="<?= base_url('transactions/process_return/' . $borrow['id']) ?>" method="post" class="text-center mt-4">
-            <button type="submit" class="btn btn-success btn-lg w-100"><i class="bi bi-arrow-return-left"></i> Confirm Return</button>
+        <form action="<?= base_url('transactions/process_return/' . $borrow['id']) ?>" method="post" class="mt-4">
+            <div class="mb-3 text-start">
+                <label for="condition" class="form-label font-weight-bold">Book Condition</label>
+                <select name="condition" id="condition" class="form-select" onchange="toggleAdditionalFine()">
+                    <option value="good">Good (No additional fine)</option>
+                    <option value="damaged">Damaged</option>
+                    <option value="lost">Lost</option>
+                </select>
+            </div>
+            
+            <div class="mb-3 text-start" id="damageDetailsDiv" style="display: none;">
+                <label for="damage_type" class="form-label font-weight-bold">Jenis Kerusakan</label>
+                <select name="damage_type" id="damage_type" class="form-select mb-2">
+                    <option value="Ringan">Ringan</option>
+                    <option value="Sedang">Sedang</option>
+                    <option value="Parah">Parah</option>
+                </select>
+                <label for="damage_note" class="form-label font-weight-bold">Keterangan Kerusakan</label>
+                <textarea name="damage_note" id="damage_note" class="form-control mb-2" rows="2" placeholder="Detail kerusakan..."></textarea>
+            </div>
+
+            <div class="mb-3 text-start" id="additionalFineDiv" style="display: none;">
+                <label for="additional_fine" class="form-label font-weight-bold">Nominal Denda Tambahan (Rp) untuk Rusak/Hilang</label>
+                <input type="number" name="additional_fine" id="additional_fine" class="form-control" value="0" min="0">
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg w-100 mt-3"><i class="bi bi-arrow-return-left"></i> Confirm Return</button>
             <a href="<?= base_url('transactions') ?>" class="btn btn-outline-secondary mt-3 w-100">Cancel</a>
         </form>
+
+        <script>
+            function toggleAdditionalFine() {
+                var condition = document.getElementById('condition').value;
+                var divAdditional = document.getElementById('additionalFineDiv');
+                var divDamage = document.getElementById('damageDetailsDiv');
+                
+                if(condition === 'damaged' || condition === 'lost') {
+                    divAdditional.style.display = 'block';
+                } else {
+                    divAdditional.style.display = 'none';
+                    document.getElementById('additional_fine').value = 0;
+                }
+
+                if(condition === 'damaged') {
+                    divDamage.style.display = 'block';
+                } else {
+                    divDamage.style.display = 'none';
+                }
+            }
+        </script>
     </div>
 </div>
 <?= $this->endSection() ?>

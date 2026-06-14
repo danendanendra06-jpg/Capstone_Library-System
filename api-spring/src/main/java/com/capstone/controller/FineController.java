@@ -16,8 +16,24 @@ public class FineController {
     @Autowired
     private FineService service;
 
+    @Autowired
+    private com.capstone.repository.UserRepository userRepo;
+
+    private com.capstone.model.User getCurrentUser() {
+        Object principal = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof org.springframework.security.core.userdetails.UserDetails) {
+            String username = ((org.springframework.security.core.userdetails.UserDetails) principal).getUsername();
+            return userRepo.findByUsername(username).orElse(null);
+        }
+        return null;
+    }
+
     @GetMapping
     public ResponseEntity<Page<Fine>> getAll(Pageable pageable) {
+        com.capstone.model.User user = getCurrentUser();
+        if (user != null) {
+            return ResponseEntity.ok(service.getByUserId(user.getId(), pageable));
+        }
         return ResponseEntity.ok(service.getAll(pageable));
     }
 
@@ -45,5 +61,47 @@ public class FineController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/pay")
+    @PreAuthorize("hasRole('USER') or hasRole('LIBRARIAN') or hasRole('ADMIN')")
+    public ResponseEntity<?> payFine(@PathVariable Long id, @RequestBody PaymentRequest request) {
+        Fine fine = service.getById(id);
+        if (fine == null) return ResponseEntity.notFound().build();
+        if ("PAID".equals(fine.getPaymentStatus())) {
+            return ResponseEntity.badRequest().body(new PaymentResponse(false, null, "Fine is already paid."));
+        }
+
+        if ("CASH".equalsIgnoreCase(request.method)) {
+            if (request.amountPaid == null || request.amountPaid.compareTo(fine.getAmount()) < 0) {
+                return ResponseEntity.badRequest().body(new PaymentResponse(false, null, "Insufficient cash amount."));
+            }
+            java.math.BigDecimal change = request.amountPaid.subtract(fine.getAmount());
+            fine.setPaymentStatus("PAID");
+            service.save(fine);
+            String msg = change.compareTo(java.math.BigDecimal.ZERO) == 0 ? "Exact amount received." : "Payment successful. Change returned: " + change;
+            return ResponseEntity.ok(new PaymentResponse(true, change, msg));
+        } else if ("CARD".equalsIgnoreCase(request.method)) {
+            fine.setPaymentStatus("PAID");
+            service.save(fine);
+            return ResponseEntity.ok(new PaymentResponse(true, java.math.BigDecimal.ZERO, "Card payment processed successfully."));
+        }
+        return ResponseEntity.badRequest().body(new PaymentResponse(false, null, "Invalid payment method."));
+    }
+
+    public static class PaymentRequest {
+        public String method;
+        public java.math.BigDecimal amountPaid;
+    }
+
+    public static class PaymentResponse {
+        public boolean success;
+        public java.math.BigDecimal change;
+        public String message;
+        public PaymentResponse(boolean success, java.math.BigDecimal change, String message) {
+            this.success = success;
+            this.change = change;
+            this.message = message;
+        }
     }
 }
