@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "return_transactions")
 public class ReturnTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
