@@ -24,11 +24,18 @@ class Books extends BaseController
                         ->join('categories', 'categories.id = books.category_id');
 
         if ($search) {
-            $this->bookModel->groupStart()
-                            ->like('title', $search)
-                            ->orLike('author', $search)
-                            ->orLike('isbn', $search)
-                            ->groupEnd();
+            $words = explode(' ', trim($search));
+            $this->bookModel->groupStart();
+            foreach ($words as $word) {
+                if (trim($word) !== '') {
+                    $this->bookModel->groupStart()
+                                    ->like('title', trim($word))
+                                    ->orLike('author', trim($word))
+                                    ->orLike('isbn', trim($word))
+                                    ->groupEnd();
+                }
+            }
+            $this->bookModel->groupEnd();
         }
 
         $data = [
