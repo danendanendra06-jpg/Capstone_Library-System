@@ -28,7 +28,7 @@ class BookModel extends Book {
       title: json['title'] ?? '',
       author: json['author'] ?? '',
       description: json['description'] ?? '',
-      coverUrl: json['coverUrl'] ?? 'https://via.placeholder.com/150',
+      coverUrl: json['coverUrl'] ?? json['cover_image'] ?? 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400&auto=format&fit=crop',
       isAvailable: json['isAvailable'] ?? true,
     );
   }

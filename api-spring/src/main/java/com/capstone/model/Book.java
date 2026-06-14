@@ -26,6 +26,9 @@ public class Book {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(name = "cover_image")
+    private String coverUrl;
+
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -45,4 +48,6 @@ public class Book {
     public void setAvailableCopies(Integer availableCopies) { this.availableCopies = availableCopies; }
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
+    public String getCoverUrl() { return coverUrl; }
+    public void setCoverUrl(String coverUrl) { this.coverUrl = coverUrl; }
 }

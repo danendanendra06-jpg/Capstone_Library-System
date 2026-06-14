@@ -17,11 +17,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<String> register(String name, String email, String password) async {
-    final token = await remoteDataSource.register(name, email, password);
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
-    return token;
+  Future<void> register(String name, String email, String password) async {
+    await remoteDataSource.register(name, email, password);
   }
 
   @override

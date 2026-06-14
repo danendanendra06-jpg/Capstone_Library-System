@@ -44,7 +44,6 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     try {
       await repository.register(name, email, password);
-      await checkAuthStatus();
       return true;
     } catch (e) {
       return false;

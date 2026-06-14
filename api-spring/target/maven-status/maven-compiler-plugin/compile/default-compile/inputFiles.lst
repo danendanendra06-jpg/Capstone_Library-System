@@ -13,6 +13,7 @@ C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\dto\CategoryDTO.j
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\repository\CartRepository.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\dto\ReturnTransactionDTO.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\dto\BorrowTransactionDTO.java
+C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\controller\BorrowController.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\dto\BookDTO.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\controller\CartController.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\service\CartService.java
@@ -55,6 +56,7 @@ C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\model\BorrowTrans
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\repository\UserRepository.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\repository\CategoryRepository.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\ApiSpringApplication.java
+C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\controller\ProfileController.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\controller\ReturnTransactionController.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\repository\ReviewRepository.java
 C:\xampp\htdocs\Capstone\api-spring\src\main\java\com\capstone\security\JwtAuthFilter.java

@@ -33,14 +33,12 @@ class RemoteDataSource {
     return response.data['token'];
   }
 
-  Future<String> register(String name, String email, String password) async {
+  Future<void> register(String name, String email, String password) async {
     await apiClient.dio.post(ApiConstants.register, data: {
       'username': name, // Fix: send full name as username
       'email': email,
       'password': password,
     });
-    // Spring Boot signup doesn't return a token, so we login automatically
-    return await login(email, password);
   }
 
   Future<UserModel> getProfile() async {

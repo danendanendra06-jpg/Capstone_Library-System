@@ -198,7 +198,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         onPressed: () async {
                           if (await auth.register(_nameCtrl.text, _emailCtrl.text, _passwordCtrl.text)) {
-                            Navigator.pushReplacementNamed(context, '/main');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Registration successful! Please sign in.'), backgroundColor: Colors.green),
+                            );
+                            Navigator.pushReplacementNamed(context, '/login');
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Registration failed. Try a different email.'), backgroundColor: Colors.red),
