@@ -27,19 +27,20 @@ class RemoteDataSource {
 
   Future<String> login(String email, String password) async {
     final response = await apiClient.dio.post(ApiConstants.login, data: {
-      'email': email,
+      'username': email,
       'password': password,
     });
     return response.data['token'];
   }
 
   Future<String> register(String name, String email, String password) async {
-    final response = await apiClient.dio.post(ApiConstants.register, data: {
-      'name': name,
+    await apiClient.dio.post(ApiConstants.register, data: {
+      'username': name, // Fix: send full name as username
       'email': email,
       'password': password,
     });
-    return response.data['token'];
+    // Spring Boot signup doesn't return a token, so we login automatically
+    return await login(email, password);
   }
 
   Future<UserModel> getProfile() async {
@@ -49,12 +50,14 @@ class RemoteDataSource {
 
   Future<List<BookModel>> getBooks() async {
     final response = await apiClient.dio.get(ApiConstants.books);
-    return (response.data as List).map((x) => BookModel.fromJson(x)).toList();
+    final data = response.data is Map ? response.data['content'] : response.data;
+    return (data as List).map((x) => BookModel.fromJson(x)).toList();
   }
 
   Future<List<BookModel>> searchBooks(String query) async {
-    final response = await apiClient.dio.get(ApiConstants.search, queryParameters: {'q': query});
-    return (response.data as List).map((x) => BookModel.fromJson(x)).toList();
+    final response = await apiClient.dio.get(ApiConstants.books, queryParameters: {'title': query});
+    final data = response.data is Map ? response.data['content'] : response.data;
+    return (data as List).map((x) => BookModel.fromJson(x)).toList();
   }
 
   Future<BookModel> getBookDetails(int id) async {

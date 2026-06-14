@@ -16,6 +16,10 @@ class AuthProvider extends ChangeNotifier {
     isAuthenticated = await repository.isLoggedIn();
     if (isAuthenticated) {
       user = await repository.getProfile();
+      if (user == null) {
+        isAuthenticated = false;
+        await logout(); // Clear stale token
+      }
     }
     notifyListeners();
   }

@@ -6,7 +6,7 @@ class UserModel extends User {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] ?? 0,
-      name: json['name'] ?? '',
+      name: json['name'] ?? json['username'] ?? '',
       email: json['email'] ?? '',
     );
   }
@@ -48,10 +48,10 @@ class TransactionModel extends Transaction {
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
       id: json['id'] ?? 0,
-      bookId: json['bookId'] ?? 0,
-      bookTitle: json['bookTitle'] ?? '',
+      bookId: json['book'] != null ? json['book']['id'] : (json['bookId'] ?? 0),
+      bookTitle: json['book'] != null ? json['book']['title'] : (json['bookTitle'] ?? ''),
       borrowDate: json['borrowDate'] ?? '',
-      dueDate: json['dueDate'],
+      dueDate: json['expectedReturnDate'] ?? json['dueDate'],
       returnDate: json['returnDate'],
       status: json['status'] ?? 'UNKNOWN',
     );

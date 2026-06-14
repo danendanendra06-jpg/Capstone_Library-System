@@ -103,23 +103,30 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             Divider(height: 24),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Borrowed On', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-                                    Text(tx.borrowDate, style: TextStyle(fontWeight: FontWeight.w500)),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Borrowed On', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                                      Text(_formatDate(tx.borrowDate), style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
+                                    ],
+                                  ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(isReturned ? 'Returned On' : 'Due Date', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-                                    Text(
-                                      tx.returnDate ?? (tx.dueDate ?? 'Pending'), 
-                                      style: TextStyle(fontWeight: FontWeight.w500, color: isOverdue ? Colors.red : Colors.black87)
-                                    ),
-                                  ],
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(isReturned ? 'Returned On' : 'Due Date', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                                      Text(
+                                        tx.returnDate != null ? _formatDate(tx.returnDate!) : (tx.dueDate != null ? _formatDate(tx.dueDate!) : 'Pending'), 
+                                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: isOverdue ? Colors.red : Colors.black87),
+                                        textAlign: TextAlign.right,
+                                      ),
+                                    ],
+                                  ),
                                 )
                               ],
                             )
@@ -130,5 +137,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   },
                 ),
     );
+  }
+
+  String _formatDate(String isoDate) {
+    try {
+      final date = DateTime.parse(isoDate);
+      return '${date.day.toString().padLeft(2, '0')} ${_monthName(date.month)} ${date.year}';
+    } catch (e) {
+      return isoDate;
+    }
+  }
+
+  String _monthName(int month) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return months[month - 1];
   }
 }
