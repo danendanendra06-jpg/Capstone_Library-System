@@ -37,6 +37,18 @@ class Borrows extends BaseController
             'pager'        => $transData['pager'],
             'search'       => $search
         ];
+        if ($this->request->getVar('ajax') == 1) {
+            $suggestions = [];
+            $q = strtolower(trim($search));
+            foreach($data['borrows'] as $t) {
+                $str = $t['member_name'] . ' - ' . $t['book_title'];
+                if ($q === '' || strpos(strtolower($str), $q) !== false) {
+                    $suggestions[] = $str;
+                }
+            }
+            return $this->response->setJSON(array_values(array_unique($suggestions)));
+        }
+
         return view('borrows/index', $data);
     }
 
@@ -47,11 +59,23 @@ class Borrows extends BaseController
         $returnData = $this->returnModel->getReturnsWithDetailsPaginated($search, 10);
 
         $data = [
-            'title'   => 'Return Transactions',
+            'title'   => 'Returned Books',
             'returns' => $returnData['returns'],
             'pager'   => $returnData['pager'],
             'search'  => $search
         ];
+        if ($this->request->getVar('ajax') == 1) {
+            $suggestions = [];
+            $q = strtolower(trim($search));
+            foreach($data['returns'] as $r) {
+                $str = $r['member_name'] . ' - ' . $r['book_title'];
+                if ($q === '' || strpos(strtolower($str), $q) !== false) {
+                    $suggestions[] = $str;
+                }
+            }
+            return $this->response->setJSON(array_values(array_unique($suggestions)));
+        }
+
         return view('borrows/returns', $data);
     }
 
@@ -177,6 +201,13 @@ class Borrows extends BaseController
                 'admin_username' => session()->get('username'),
                 'action' => 'RETURN_BOOK',
                 'details' => 'Processed return for borrow ID ' . $id . '. Condition: ' . $returnCondition . '. Total Fines Issued: Rp' . $totalFine
+            ]);
+
+            // Save to returns table
+            $this->returnModel->save([
+                'borrow_id'   => $id,
+                'return_date' => $currentDate,
+                'fine_amount' => $totalFine
             ]);
 
             // Update stock (only if not lost)

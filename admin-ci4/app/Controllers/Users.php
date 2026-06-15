@@ -23,6 +23,17 @@ class Users extends BaseController
             'pager'  => $this->userModel->pager,
             'search' => $search
         ];
+        if ($this->request->getVar('ajax') == 1) {
+            $suggestions = [];
+            $q = strtolower(trim($search));
+            foreach($data['users'] as $u) {
+                if ($q === '' || strpos(strtolower($u['username']), $q) !== false) {
+                    $suggestions[] = $u['username'];
+                }
+            }
+            return $this->response->setJSON(array_values(array_unique($suggestions)));
+        }
+
         return view('users/index', $data);
     }
 

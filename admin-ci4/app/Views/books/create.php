@@ -43,7 +43,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label class="form-label">ISBN</label>
-                    <input type="text" name="isbn" class="form-control" value="<?= old('isbn', $book['isbn'] ?? '') ?>">
+                    <input type="text" name="isbn" id="isbn-input" class="form-control" value="<?= old('isbn', $book['isbn'] ?? '') ?>" placeholder="xxx-xxx-xxx-xxx">
                 </div>
                 <div class="col-md-3 mb-3">
                     <label class="form-label">Publisher</label>
@@ -68,4 +68,21 @@
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const isbnInput = document.getElementById('isbn-input');
+    if (isbnInput) {
+        isbnInput.addEventListener('input', function(e) {
+            // Hapus karakter non-alphanumeric
+            let val = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+            // Batasi maksimal 12 karakter (karena formatnya xxx-xxx-xxx-xxx)
+            val = val.substring(0, 12);
+            // Pecah setiap 3 karakter dan gabungkan dengan strip (-)
+            let formatted = val.match(/.{1,3}/g);
+            e.target.value = formatted ? formatted.join('-') : '';
+        });
+    }
+});
+</script>
 <?= $this->endSection() ?>

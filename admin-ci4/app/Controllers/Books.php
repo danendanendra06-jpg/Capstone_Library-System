@@ -45,6 +45,20 @@ class Books extends BaseController
             'search' => $search
         ];
 
+        if ($this->request->getGet('ajax') == 1) {
+            $suggestions = [];
+            $q = strtolower(trim($search));
+            foreach($data['books'] as $b) {
+                if ($q === '' || strpos(strtolower($b['title']), $q) !== false) {
+                    $suggestions[] = $b['title'];
+                }
+                if ($q !== '' && strpos(strtolower($b['author']), $q) !== false) {
+                    $suggestions[] = $b['author'];
+                }
+            }
+            return $this->response->setJSON(array_values(array_unique($suggestions)));
+        }
+
         return view('books/index', $data);
     }
 
@@ -63,6 +77,13 @@ class Books extends BaseController
             'title' => 'required|min_length[3]|max_length[255]',
             'author' => 'required|min_length[3]|max_length[150]',
             'category_id' => 'required|is_natural_no_zero',
+            'isbn' => [
+                'rules' => 'required|is_unique[books.isbn]|regex_match[/^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}$/]',
+                'errors' => [
+                    'is_unique' => 'This ISBN is already registered.',
+                    'regex_match' => 'ISBN must be in xxx-xxx-xxx-xxx format.'
+                ]
+            ],
             'stock' => 'required|integer',
         ];
 
@@ -103,6 +124,13 @@ class Books extends BaseController
             'title' => 'required|min_length[3]|max_length[255]',
             'author' => 'required|min_length[3]|max_length[150]',
             'category_id' => 'required|is_natural_no_zero',
+            'isbn' => [
+                'rules' => 'required|is_unique[books.isbn,id,' . $id . ']|regex_match[/^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}$/]',
+                'errors' => [
+                    'is_unique' => 'This ISBN is already registered.',
+                    'regex_match' => 'ISBN must be in xxx-xxx-xxx-xxx format.'
+                ]
+            ],
             'stock' => 'required|integer',
         ];
 

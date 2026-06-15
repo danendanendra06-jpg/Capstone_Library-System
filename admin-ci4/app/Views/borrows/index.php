@@ -55,17 +55,26 @@
                         <td><?= esc($t['borrow_date']) ?></td>
                         <td><?= esc($t['due_date']) ?></td>
                         <td>
-                            <?php if($t['status'] === 'borrowed'): ?>
+                            <?php 
+                                $status = strtoupper($t['status']);
+                                if($status === 'BORROWED'): 
+                            ?>
                                 <span class="badge bg-warning text-dark">Borrowed</span>
-                            <?php elseif($t['status'] === 'returned'): ?>
+                            <?php elseif($status === 'RETURNED'): ?>
                                 <span class="badge bg-success">Returned</span>
-                            <?php else: ?>
+                            <?php elseif($status === 'DAMAGED'): ?>
+                                <span class="badge bg-danger">Damaged</span>
+                            <?php elseif($status === 'LOST'): ?>
+                                <span class="badge bg-dark">Lost</span>
+                            <?php elseif($status === 'OVERDUE'): ?>
                                 <span class="badge bg-danger">Overdue</span>
+                            <?php else: ?>
+                                <span class="badge bg-secondary"><?= esc($status) ?></span>
                             <?php endif; ?>
                         </td>
                         <td>
                             <a href="<?= base_url('borrows/' . $t['id']) ?>" class="btn btn-sm btn-info text-white"><i class="bi bi-eye"></i> View</a>
-                            <?php if($t['status'] === 'borrowed' || $t['status'] === 'overdue'): ?>
+                            <?php if($status === 'BORROWED' || $status === 'OVERDUE'): ?>
                                 <a href="<?= base_url('borrows/process_return/' . $t['id']) ?>" class="btn btn-sm btn-success">Process Return</a>
                             <?php else: ?>
                                 <span class="text-muted"><i class="bi bi-check-circle-fill text-success"></i> Completed</span>

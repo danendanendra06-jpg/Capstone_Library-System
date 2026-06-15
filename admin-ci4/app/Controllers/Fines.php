@@ -26,6 +26,18 @@ class Fines extends BaseController
             'search' => $search
         ];
 
+        if ($this->request->getVar('ajax') == 1) {
+            $suggestions = [];
+            $q = strtolower(trim($search));
+            foreach($data['fines'] as $f) {
+                $str = $f['member_name'] . ' - ' . $f['book_title'];
+                if ($q === '' || strpos(strtolower($str), $q) !== false) {
+                    $suggestions[] = $str;
+                }
+            }
+            return $this->response->setJSON(array_values(array_unique($suggestions)));
+        }
+
         return view('fines/index', $data);
     }
 
