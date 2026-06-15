@@ -33,7 +33,7 @@ class Borrows extends BaseController
 
         $data = [
             'title'        => 'Borrows',
-            'transactions' => $transData['transactions'],
+            'borrows'      => $transData['transactions'],
             'pager'        => $transData['pager'],
             'search'       => $search
         ];
