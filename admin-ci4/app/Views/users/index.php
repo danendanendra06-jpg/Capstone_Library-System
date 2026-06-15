@@ -29,7 +29,7 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>ID</th>
+                        <th>No</th>
                         <th>Username</th>
                         <th>Email</th>
                         <th>Role</th>
@@ -38,9 +38,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($users as $u): ?>
+                    <?php 
+                        $currentPage = $pager->getCurrentPage() ?? 1;
+                        $no = 1 + (10 * ($currentPage - 1));
+                        foreach($users as $u): 
+                    ?>
                     <tr>
-                        <td><?= esc($u['id']) ?></td>
+                        <td><?= $no++ ?></td>
                         <td class="fw-bold"><?= esc($u['username']) ?></td>
                         <td><?= esc($u['email']) ?></td>
                         <td>
@@ -87,8 +91,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-end mt-3">
-            <?= $pager->links() ?>
+        <div class="d-flex justify-content-center mt-3">
+            <?= $pager->links('default', 'bootstrap_pagination') ?>
         </div>
     </div>
 </div>

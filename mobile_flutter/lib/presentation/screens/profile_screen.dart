@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers.dart';
-import 'transactions_screen.dart';
+import 'dummy_screens.dart';
 import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -86,11 +86,11 @@ class ProfileScreen extends StatelessWidget {
                                 leading: Container(
                                   padding: EdgeInsets.all(10),
                                   decoration: BoxDecoration(color: Colors.blue[50], borderRadius: BorderRadius.circular(12)),
-                                  child: Icon(Icons.history, color: Colors.blue),
+                                  child: Icon(Icons.settings, color: Colors.blue),
                                 ),
-                                title: Text('Borrowing History', style: TextStyle(fontWeight: FontWeight.w600)),
+                                title: Text('Settings', style: TextStyle(fontWeight: FontWeight.w600)),
                                 trailing: Icon(Icons.chevron_right, color: Colors.grey),
-                                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => TransactionsScreen())),
+                                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen())),
                               ),
                             ],
                           ),

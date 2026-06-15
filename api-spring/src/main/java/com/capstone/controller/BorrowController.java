@@ -1,10 +1,10 @@
 package com.capstone.controller;
 
 import com.capstone.model.Book;
-import com.capstone.model.BorrowTransaction;
+import com.capstone.model.Borrow;
 import com.capstone.model.User;
 import com.capstone.repository.BookRepository;
-import com.capstone.repository.BorrowTransactionRepository;
+import com.capstone.repository.BorrowRepository;
 import com.capstone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class BorrowController {
 
     @Autowired
-    private BorrowTransactionRepository borrowRepo;
+    private BorrowRepository borrowRepo;
 
     @Autowired
     private BookRepository bookRepo;
@@ -64,12 +64,12 @@ public class BorrowController {
             return ResponseEntity.badRequest().body(Map.of("message", "Stok buku habis."));
         }
 
-        List<BorrowTransaction> existingBorrows = borrowRepo.findByUserIdAndBookIdAndStatus(user.getId(), bookId, "BORROWED");
+        List<Borrow> existingBorrows = borrowRepo.findByUserIdAndBookIdAndStatus(user.getId(), bookId, "BORROWED");
         if (!existingBorrows.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("message", "Anda masih meminjam buku ini dan belum mengembalikannya."));
         }
 
-        BorrowTransaction transaction = new BorrowTransaction();
+        Borrow transaction = new Borrow();
         transaction.setUser(user);
         transaction.setBook(book);
         Date now = new Date();
@@ -120,14 +120,14 @@ public class BorrowController {
         return localDate1.isEqual(localDate2);
     }
 
-    @GetMapping("/transactions")
-    public ResponseEntity<?> getTransactions() {
+    @GetMapping("/borrows")
+    public ResponseEntity<?> getBorrows() {
         User user = getCurrentUser();
         if (user == null) {
             return ResponseEntity.status(401).build();
         }
 
-        List<BorrowTransaction> transactions = borrowRepo.findByUserId(user.getId());
+        List<Borrow> transactions = borrowRepo.findByUserId(user.getId());
         return ResponseEntity.ok(transactions);
     }
 }

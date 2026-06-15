@@ -64,16 +64,16 @@ class BookRepositoryImpl implements BookRepository {
   Future<Book> getBookDetails(int id) => remoteDataSource.getBookDetails(id);
 }
 
-class TransactionRepositoryImpl implements TransactionRepository {
+class BorrowRepositoryImpl implements BorrowRepository {
   final RemoteDataSource remoteDataSource;
 
-  TransactionRepositoryImpl(this.remoteDataSource);
+  BorrowRepositoryImpl(this.remoteDataSource);
 
   @override
   Future<void> borrowBook(int bookId, {String? dueDate}) => remoteDataSource.borrowBook(bookId, dueDate: dueDate);
 
   @override
-  Future<List<Transaction>> getTransactions() => remoteDataSource.getTransactions();
+  Future<List<Borrow>> getBorrows() => remoteDataSource.getBorrows();
 }
 
 class CategoryRepositoryImpl implements CategoryRepository {

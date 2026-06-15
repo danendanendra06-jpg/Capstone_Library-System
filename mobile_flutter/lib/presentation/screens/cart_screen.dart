@@ -11,7 +11,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
-    final txProvider = Provider.of<TransactionProvider>(context, listen: false);
+    final txProvider = Provider.of<BorrowProvider>(context, listen: false);
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -129,7 +129,7 @@ class CartScreen extends StatelessWidget {
                                                   context: context,
                                                   initialDate: selectedDate,
                                                   firstDate: now,
-                                                  lastDate: now.add(Duration(days: 14)),
+                                                  lastDate: DateTime(2100),
                                                 );
                                                 if (date != null) {
                                                   setState(() {
@@ -153,10 +153,7 @@ class CartScreen extends StatelessWidget {
                                               ),
                                             ),
                                             SizedBox(height: 16),
-                                            Text(
-                                              'Maksimal peminjaman 14 hari dari tanggal pinjam.',
-                                              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 13, color: Colors.grey[700]),
-                                            ),
+                                            // removed hint
                                           ],
                                         ),
                                         actions: [

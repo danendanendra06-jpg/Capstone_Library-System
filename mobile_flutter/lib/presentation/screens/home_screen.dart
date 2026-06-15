@@ -9,7 +9,7 @@ import 'profile_screen.dart';
 import 'notifications_screen.dart';
 import 'fines_screen.dart';
 import 'book_details_screen.dart';
-import 'transactions_screen.dart';
+import 'borrows_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -102,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text('Borrowing History'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => TransactionsScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => BorrowsScreen()));
               },
             ),
             ListTile(

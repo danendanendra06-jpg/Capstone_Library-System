@@ -18,8 +18,8 @@ class FineModel extends Model
     {
         $builder = $this->select('fines.*, users.username as member_name, users.email, books.title as book_title')
                         ->join('users', 'users.id = fines.user_id')
-                        ->join('borrow_transactions', 'borrow_transactions.id = fines.borrow_id')
-                        ->join('books', 'books.id = borrow_transactions.book_id');
+                        ->join('borrows', 'borrows.id = fines.borrow_id')
+                        ->join('books', 'books.id = borrows.book_id');
 
         if (!empty($search)) {
             $builder->groupStart()
@@ -36,10 +36,10 @@ class FineModel extends Model
 
     public function getFineDetail($id)
     {
-        return $this->select('fines.*, users.username as member_name, users.email, books.title as book_title, borrow_transactions.borrow_date, borrow_transactions.due_date')
+        return $this->select('fines.*, users.username as member_name, users.email, books.title as book_title, borrows.borrow_date, borrows.due_date')
                     ->join('users', 'users.id = fines.user_id')
-                    ->join('borrow_transactions', 'borrow_transactions.id = fines.borrow_id')
-                    ->join('books', 'books.id = borrow_transactions.book_id')
+                    ->join('borrows', 'borrows.id = fines.borrow_id')
+                    ->join('books', 'books.id = borrows.book_id')
                     ->where('fines.id', $id)
                     ->first();
     }

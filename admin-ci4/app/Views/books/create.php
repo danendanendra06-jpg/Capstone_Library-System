@@ -53,15 +53,11 @@
                     <label class="form-label">Publication Year</label>
                     <input type="number" name="publication_year" class="form-control" value="<?= old('publication_year', $book['publication_year'] ?? '') ?>">
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Shelf Location</label>
-                    <input type="text" name="shelf_location" class="form-control" value="<?= old('shelf_location', $book['shelf_location'] ?? '') ?>">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Cover Image URL</label>
+                    <input type="url" name="cover_image" class="form-control" placeholder="https://..." value="<?= old('cover_image', $book['cover_image'] ?? '') ?>">
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Price (IDR)</label>
-                    <input type="number" step="0.01" name="price" class="form-control" value="<?= old('price', $book['price'] ?? '') ?>">
-                </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                     <label class="form-label">Stock Quantity</label>
                     <input type="number" name="stock" class="form-control" value="<?= old('stock', $book['stock'] ?? '0') ?>" required min="0">
                 </div>

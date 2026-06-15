@@ -34,7 +34,7 @@
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>ID</th>
+                        <th>No</th>
                         <th>Member</th>
                         <th>Book</th>
                         <th>Amount</th>
@@ -43,9 +43,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($fines as $fine): ?>
+                    <?php 
+                        $currentPage = $pager->getCurrentPage() ?? 1;
+                        $no = 1 + (10 * ($currentPage - 1));
+                        foreach($fines as $fine): 
+                    ?>
                     <tr>
-                        <td>#<?= esc($fine['id']) ?></td>
+                        <td><?= $no++ ?></td>
                         <td><?= esc($fine['member_name']) ?></td>
                         <td><?= esc($fine['book_title']) ?></td>
                         <td class="fw-bold">Rp<?= number_format($fine['amount'], 0, ',', '.') ?></td>
@@ -58,15 +62,6 @@
                         </td>
                         <td>
                             <a href="<?= base_url('fines/' . $fine['id']) ?>" class="btn btn-sm btn-info text-white"><i class="bi bi-eye"></i> View</a>
-                            <?php if($fine['payment_status'] === 'UNPAID'): ?>
-                                <form action="<?= base_url('fines/mark_paid/' . $fine['id']) ?>" method="post" class="d-inline">
-                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Mark this fine as paid?');"><i class="bi bi-cash"></i> Pay</button>
-                                </form>
-                            <?php else: ?>
-                                <form action="<?= base_url('fines/mark_unpaid/' . $fine['id']) ?>" method="post" class="d-inline">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Revert to unpaid?');"><i class="bi bi-arrow-counterclockwise"></i> Unpay</button>
-                                </form>
-                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -76,8 +71,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-end mt-3">
-            <?= $pager->links() ?>
+        <div class="d-flex justify-content-center mt-3">
+            <?= $pager->links('default', 'bootstrap_pagination') ?>
         </div>
     </div>
 </div>

@@ -17,7 +17,7 @@ public class Fine {
     @ManyToOne
     @JoinColumn(name = "borrow_id")
     @com.fasterxml.jackson.annotation.JsonIgnore
-    private BorrowTransaction borrowTransaction;
+    private Borrow borrowTransaction;
 
     @Column(name = "fine_type")
     private String fineType; // LATE, DAMAGED, LOST
@@ -32,8 +32,8 @@ public class Fine {
     public void setId(Long id) { this.id = id; }
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
-    public BorrowTransaction getBorrowTransaction() { return borrowTransaction; }
-    public void setBorrowTransaction(BorrowTransaction borrowTransaction) { this.borrowTransaction = borrowTransaction; }
+    public Borrow getBorrow() { return borrowTransaction; }
+    public void setBorrow(Borrow borrowTransaction) { this.borrowTransaction = borrowTransaction; }
     public BigDecimal getAmount() { return amount; }
     public void setAmount(BigDecimal amount) { this.amount = amount; }
     public String getReason() { return reason; }

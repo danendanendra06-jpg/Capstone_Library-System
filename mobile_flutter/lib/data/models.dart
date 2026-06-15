@@ -49,8 +49,8 @@ class BookModel extends Book {
   }
 }
 
-class TransactionModel extends Transaction {
-  TransactionModel({
+class BorrowModel extends Borrow {
+  BorrowModel({
     required super.id,
     required super.bookId,
     required super.bookTitle,
@@ -63,8 +63,8 @@ class TransactionModel extends Transaction {
     super.fineAmount,
   });
 
-  factory TransactionModel.fromJson(Map<String, dynamic> json) {
-    return TransactionModel(
+  factory BorrowModel.fromJson(Map<String, dynamic> json) {
+    return BorrowModel(
       id: json['id'] ?? 0,
       bookId: json['book'] != null ? json['book']['id'] : (json['bookId'] ?? 0),
       bookTitle: json['book'] != null ? json['book']['title'] : (json['bookTitle'] ?? ''),

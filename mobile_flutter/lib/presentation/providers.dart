@@ -69,6 +69,29 @@ class AuthProvider extends ChangeNotifier {
   }
 }
 
+class ThemeProvider extends ChangeNotifier {
+  ThemeMode themeMode = ThemeMode.system;
+
+  ThemeProvider() {
+    _loadTheme();
+  }
+
+  Future<void> _loadTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isDark = prefs.getBool('isDark') ?? false;
+    themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
+  }
+
+  Future<void> toggleTheme(bool isDark) async {
+    themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDark', isDark);
+    notifyListeners();
+  }
+
+  bool get isDarkMode => themeMode == ThemeMode.dark;
+}
 class BookProvider extends ChangeNotifier {
   final BookRepository repository;
   List<Book> books = []; // Let's use this as latestBooks
@@ -144,18 +167,18 @@ class CartProvider extends ChangeNotifier {
   }
 }
 
-class TransactionProvider extends ChangeNotifier {
-  final TransactionRepository repository;
-  List<Transaction> transactions = [];
+class BorrowProvider extends ChangeNotifier {
+  final BorrowRepository repository;
+  List<Borrow> borrows = [];
   bool isLoading = false;
 
-  TransactionProvider(this.repository);
+  BorrowProvider(this.repository);
 
-  Future<void> loadTransactions() async {
+  Future<void> loadBorrows() async {
     isLoading = true;
     notifyListeners();
     try {
-      transactions = await repository.getTransactions();
+      borrows = await repository.getBorrows();
     } catch (e) {
       // Handle error
     } finally {

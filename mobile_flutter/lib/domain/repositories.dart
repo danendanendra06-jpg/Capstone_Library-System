@@ -16,9 +16,9 @@ abstract class BookRepository {
   Future<Book> getBookDetails(int id);
 }
 
-abstract class TransactionRepository {
+abstract class BorrowRepository {
   Future<void> borrowBook(int bookId, {String? dueDate});
-  Future<List<Transaction>> getTransactions();
+  Future<List<Borrow>> getBorrows();
 }
 
 abstract class CategoryRepository {

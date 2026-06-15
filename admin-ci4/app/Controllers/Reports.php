@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\BorrowTransactionModel;
+use App\Models\BorrowModel;
 use App\Models\FineModel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -16,7 +16,7 @@ class Reports extends BaseController
 
     public function __construct()
     {
-        $this->borrowModel = new BorrowTransactionModel();
+        $this->borrowModel = new BorrowModel();
         $this->fineModel = new FineModel();
     }
 
@@ -38,8 +38,8 @@ class Reports extends BaseController
         if ($type === 'fines') {
             $builder = $this->fineModel->select('fines.*, users.username as member_name, books.title as book_title')
                                        ->join('users', 'users.id = fines.user_id')
-                                       ->join('borrow_transactions', 'borrow_transactions.id = fines.borrow_id')
-                                       ->join('books', 'books.id = borrow_transactions.book_id');
+                                       ->join('borrows', 'borrows.id = fines.borrow_id')
+                                       ->join('books', 'books.id = borrows.book_id');
             if ($startDate && $endDate) {
                 $builder->where('fines.created_at >=', $startDate . ' 00:00:00')
                         ->where('fines.created_at <=', $endDate . ' 23:59:59');
@@ -47,18 +47,18 @@ class Reports extends BaseController
             $results = $builder->findAll();
         } else {
             // borrows or returns
-            $builder = $this->borrowModel->select('borrow_transactions.*, users.username as member_name, books.title as book_title')
-                                         ->join('users', 'users.id = borrow_transactions.user_id')
-                                         ->join('books', 'books.id = borrow_transactions.book_id');
+            $builder = $this->borrowModel->select('borrows.*, users.username as member_name, books.title as book_title')
+                                         ->join('users', 'users.id = borrows.user_id')
+                                         ->join('books', 'books.id = borrows.book_id');
             if ($type === 'returns') {
-                $builder->whereIn('borrow_transactions.status', ['RETURNED', 'DAMAGED', 'LOST']);
+                $builder->whereIn('borrows.status', ['RETURNED', 'DAMAGED', 'LOST']);
             } else {
-                $builder->where('borrow_transactions.status', 'BORROWED');
+                $builder->where('borrows.status', 'BORROWED');
             }
 
             if ($startDate && $endDate) {
-                $builder->where('borrow_transactions.borrow_date >=', $startDate)
-                        ->where('borrow_transactions.borrow_date <=', $endDate);
+                $builder->where('borrows.borrow_date >=', $startDate)
+                        ->where('borrows.borrow_date <=', $endDate);
             }
             $results = $builder->findAll();
         }

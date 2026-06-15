@@ -53,6 +53,17 @@ class Fines extends BaseController
                 return redirect()->to('/fines')->with('error', 'Fine not found.');
             }
 
+            $method = $this->request->getPost('payment_method') ?? 'CASH';
+            $amountReceived = (float)$this->request->getPost('amount_received');
+            $change = 0;
+
+            if ($method === 'CASH') {
+                if ($amountReceived < $fine['amount']) {
+                    return redirect()->back()->with('error', 'Amount received is less than the fine amount.');
+                }
+                $change = $amountReceived - $fine['amount'];
+            }
+
             $this->fineModel->update($id, ['payment_status' => 'PAID']);
             
             // Add audit log
@@ -60,10 +71,15 @@ class Fines extends BaseController
             $auditModel->save([
                 'admin_username' => session()->get('username'),
                 'action' => 'UPDATE_FINE',
-                'details' => 'Marked fine ID ' . $id . ' as PAID.'
+                'details' => 'Marked fine ID ' . $id . ' as PAID via ' . $method . '.'
             ]);
 
-            return redirect()->back()->with('success', 'Fine marked as paid.');
+            $successMsg = 'Fine marked as paid via ' . $method . '.';
+            if ($method === 'CASH' && $change > 0) {
+                $successMsg .= ' Kembalian: Rp' . number_format($change, 0, ',', '.');
+            }
+
+            return redirect()->back()->with('success', $successMsg);
         }
         return redirect()->to('/fines');
     }

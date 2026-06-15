@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\BookModel;
 use App\Models\UserModel;
-use App\Models\BorrowTransactionModel;
+use App\Models\BorrowModel;
 use App\Models\FineModel;
 
 class Admin extends BaseController
@@ -13,21 +13,21 @@ class Admin extends BaseController
     {
         $bookModel   = new BookModel();
         $userModel   = new UserModel();
-        $borrowModel = new BorrowTransactionModel();
+        $borrowModel = new BorrowModel();
         $fineModel   = new FineModel();
 
         $sumFines = $fineModel->where('payment_status', 'UNPAID')->selectSum('amount')->first();
 
         // 1. Buku Populer (Top 5)
-        $popularBooks = $borrowModel->select('books.title, COUNT(borrow_transactions.id) as borrow_count')
-                                    ->join('books', 'books.id = borrow_transactions.book_id')
+        $popularBooks = $borrowModel->select('books.title, COUNT(borrows.id) as borrow_count')
+                                    ->join('books', 'books.id = borrows.book_id')
                                     ->groupBy('books.id')
                                     ->orderBy('borrow_count', 'DESC')
                                     ->limit(5)->findAll();
 
         // 2. Member Aktif (Top 5)
-        $activeMembers = $borrowModel->select('users.username, COUNT(borrow_transactions.id) as borrow_count')
-                                     ->join('users', 'users.id = borrow_transactions.user_id')
+        $activeMembers = $borrowModel->select('users.username, COUNT(borrows.id) as borrow_count')
+                                     ->join('users', 'users.id = borrows.user_id')
                                      ->groupBy('users.id')
                                      ->orderBy('borrow_count', 'DESC')
                                      ->limit(5)->findAll();
@@ -52,7 +52,7 @@ class Admin extends BaseController
         // 6. Monthly Chart (Borrows per month this year)
         $monthlyQuery = $db->query("
             SELECT MONTH(borrow_date) as m, COUNT(*) as c 
-            FROM borrow_transactions 
+            FROM borrows 
             WHERE YEAR(borrow_date) = YEAR(CURDATE()) 
             GROUP BY MONTH(borrow_date)
         ")->getResultArray();

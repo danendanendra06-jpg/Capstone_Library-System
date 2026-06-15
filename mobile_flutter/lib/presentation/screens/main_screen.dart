@@ -4,6 +4,7 @@ import '../providers.dart';
 import 'home_screen.dart';
 import 'search_screen.dart';
 import 'cart_screen.dart';
+import 'borrows_screen.dart';
 import 'profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final _screens = [
     HomeScreen(),
     CartScreen(),
+    BorrowsScreen(),
     ProfileScreen(),
   ];
 
@@ -53,6 +55,7 @@ class _MainScreenState extends State<MainScreen> {
             activeIcon: Icon(Icons.shopping_cart),
             label: 'Cart',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.history_outlined), activeIcon: Icon(Icons.history), label: 'History'),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
         ],
       ),

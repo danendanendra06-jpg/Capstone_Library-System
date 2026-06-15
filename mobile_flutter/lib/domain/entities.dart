@@ -38,7 +38,7 @@ class Book {
   });
 }
 
-class Transaction {
+class Borrow {
   final int id;
   final int bookId;
   final String bookTitle;
@@ -50,7 +50,7 @@ class Transaction {
   final int? lateDays;
   final double? fineAmount;
 
-  Transaction({
+  Borrow({
     required this.id,
     required this.bookId,
     required this.bookTitle,

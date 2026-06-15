@@ -18,16 +18,20 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>ID</th>
+                        <th>No</th>
                         <th>Name</th>
                         <th>Description</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($categories as $c): ?>
+                    <?php 
+                        $currentPage = $pager->getCurrentPage() ?? 1;
+                        $no = 1 + (10 * ($currentPage - 1));
+                        foreach($categories as $c): 
+                    ?>
                     <tr>
-                        <td><?= esc($c['id']) ?></td>
+                        <td><?= $no++ ?></td>
                         <td class="fw-bold"><?= esc($c['name']) ?></td>
                         <td class="text-muted"><?= esc($c['description']) ?></td>
                         <td>
@@ -45,8 +49,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-end mt-3">
-            <?= $pager->links() ?>
+        <div class="d-flex justify-content-center mt-3">
+            <?= $pager->links('default', 'bootstrap_pagination') ?>
         </div>
     </div>
 </div>

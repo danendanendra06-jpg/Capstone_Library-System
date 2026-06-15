@@ -17,7 +17,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white border-0 pt-4 pb-0 text-center">
                 <h5>Fine Receipt #<?= esc($fine['id']) ?></h5>
-                <?php if($fine['status'] === 'paid'): ?>
+                <?php if($fine['payment_status'] === 'PAID'): ?>
                     <span class="badge bg-success fs-6 mt-2"><i class="bi bi-check-circle"></i> PAID</span>
                 <?php else: ?>
                     <span class="badge bg-danger fs-6 mt-2"><i class="bi bi-x-circle"></i> UNPAID</span>
@@ -53,14 +53,41 @@
                 <hr>
                 <div class="text-center">
                     <p class="text-muted mb-1">Total Fine Amount</p>
-                    <h2 class="text-danger fw-bold">Rp<?= number_format($fine['fine_amount'], 0, ',', '.') ?></h2>
+                    <h2 class="text-danger fw-bold">Rp<?= number_format($fine['amount'], 0, ',', '.') ?></h2>
                 </div>
                 
                 <div class="mt-4 text-center">
-                    <?php if($fine['status'] === 'unpaid'): ?>
+                    <?php if($fine['payment_status'] === 'UNPAID'): ?>
                         <form action="<?= base_url('fines/mark_paid/' . $fine['id']) ?>" method="post">
-                            <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm"><i class="bi bi-cash"></i> Mark as Paid</button>
+                            <div class="mb-3 text-start">
+                                <label class="form-label fw-bold">Payment Method</label>
+                                <select class="form-select" name="payment_method" id="paymentMethod" onchange="toggleCashInput()">
+                                    <option value="CASH">Cash</option>
+                                    <option value="ATM">Kartu ATM</option>
+                                    <option value="DIGITAL">Digital (DANA, GoPay, dll)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3 text-start" id="cashInputContainer">
+                                <label class="form-label fw-bold">Amount Received</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="number" class="form-control" name="amount_received" id="amountReceived" value="<?= $fine['amount'] ?>" min="<?= $fine['amount'] ?>">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm"><i class="bi bi-cash"></i> Process Payment</button>
                         </form>
+                        <script>
+                        function toggleCashInput() {
+                            const method = document.getElementById('paymentMethod').value;
+                            const cashInput = document.getElementById('cashInputContainer');
+                            if (method === 'CASH') {
+                                cashInput.style.display = 'block';
+                            } else {
+                                cashInput.style.display = 'none';
+                            }
+                        }
+                        </script>
                     <?php else: ?>
                         <form action="<?= base_url('fines/mark_unpaid/' . $fine['id']) ?>" method="post">
                             <button type="submit" class="btn btn-outline-danger w-100"><i class="bi bi-arrow-counterclockwise"></i> Revert to Unpaid</button>

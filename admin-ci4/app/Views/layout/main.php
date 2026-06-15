@@ -148,9 +148,16 @@
                 <i class="bi bi-people-fill"></i> Members
             </a>
             <p class="text-uppercase text-muted px-4 mt-4 mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">Circulation</p>
-            <a href="<?= base_url('transactions') ?>" class="<?= (current_url(true)->getSegment(1) == 'transactions') ? 'active' : '' ?>">
-                <i class="bi bi-arrow-left-right"></i> Transactions
-            </a>
+                <li class="nav-item mb-1">
+                    <a href="<?= base_url('borrows') ?>" class="nav-link <?= (url_is('borrows*') && !url_is('borrows/returns*')) ? 'active bg-info text-white' : 'text-white-50' ?>">
+                        <i class="bi bi-arrow-left-right me-2"></i> Borrows
+                    </a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a href="<?= base_url('borrows/returns') ?>" class="nav-link <?= url_is('borrows/returns*') ? 'active bg-info text-white' : 'text-white-50' ?>">
+                        <i class="bi bi-box-arrow-in-down-left me-2"></i> Returns
+                    </a>
+                </li>
             <a href="<?= base_url('fines') ?>" class="<?= (current_url(true)->getSegment(1) == 'fines') ? 'active' : '' ?>">
                 <i class="bi bi-wallet2"></i> Fines
             </a>

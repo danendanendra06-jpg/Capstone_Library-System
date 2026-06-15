@@ -20,7 +20,7 @@
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>ID</th>
+                        <th>No</th>
                         <th>Title</th>
                         <th>Author</th>
                         <th>Category</th>
@@ -31,9 +31,13 @@
                 </thead>
                 <tbody>
                     <?php if(!empty($books)): ?>
-                        <?php foreach($books as $book): ?>
+                        <?php 
+                            $currentPage = $pager->getCurrentPage() ?? 1;
+                            $no = 1 + (10 * ($currentPage - 1));
+                            foreach($books as $book): 
+                        ?>
                             <tr>
-                                <td><?= esc($book['id']) ?></td>
+                                <td><?= $no++ ?></td>
                                 <td><strong><?= esc($book['title']) ?></strong></td>
                                 <td><?= esc($book['author']) ?></td>
                                 <td><span class="badge bg-secondary"><?= esc($book['category_name']) ?></span></td>
@@ -62,7 +66,7 @@
         </div>
         
         <div class="d-flex justify-content-center mt-4">
-            <?= $pager->links() ?>
+            <?= $pager->links('default', 'bootstrap_pagination') ?>
         </div>
     </div>
 </div>

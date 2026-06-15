@@ -7,7 +7,7 @@ public class Gen {
     private static final String BASE_PATH = "src/main/java/com/capstone/";
 
     public static void main(String[] args) throws IOException {
-        String[] entities = {"Category", "Book", "Review", "Cart", "CartItem", "BorrowTransaction", "ReturnTransaction", "Fine", "Notification"};
+        String[] entities = {"Category", "Book", "Review", "Cart", "CartItem", "Borrow", "BookReturn", "Fine", "Notification"};
         
         for (String entity : entities) {
             createRepository(entity);

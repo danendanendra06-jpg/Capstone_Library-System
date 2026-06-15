@@ -5,7 +5,7 @@ class ApiConstants {
   static const String books = '/books';
   static const String search = '/books/search';
   static const String borrow = '/borrow';
-  static const String transactions = '/transactions';
+  static const String borrows = '/borrows';
   static const String profile = '/profile';
   static const String categories = '/categories';
   static const String notifications = '/notifications';
