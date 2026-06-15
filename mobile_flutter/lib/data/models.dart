@@ -122,23 +122,25 @@ class ReviewModel extends Review {
 
 class FineModel extends Fine {
   FineModel({
-    required super.id, 
-    required super.amount, 
-    required super.reason, 
+    required super.id,
+    required super.borrowId,
+    required super.amount,
+    required super.reason,
     required super.isPaid,
     super.fineType,
-    super.paymentStatus,
+    super.paymentMethod,
   });
 
   factory FineModel.fromJson(Map<String, dynamic> json) {
     String paymentStat = json['paymentStatus'] ?? json['payment_status'] ?? (json['status'] == 'paid' ? 'PAID' : 'UNPAID');
     return FineModel(
       id: json['id'] ?? 0,
+      borrowId: json['borrow'] != null ? json['borrow']['id'] : (json['borrowId'] ?? 0),
       amount: (json['amount'] ?? json['fine_amount'] ?? 0).toDouble(),
       reason: json['reason'] ?? '',
       isPaid: paymentStat == 'PAID' || (json['isPaid'] == true),
       fineType: json['fineType'] ?? json['fine_type'],
-      paymentStatus: paymentStat,
+      paymentMethod: json['paymentMethod'] ?? json['payment_method'],
     );
   }
 }
