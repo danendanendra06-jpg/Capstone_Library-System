@@ -92,11 +92,14 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
 class FineRepositoryImpl implements FineRepository {
   final RemoteDataSource remoteDataSource;
+
   FineRepositoryImpl(this.remoteDataSource);
+
   @override
   Future<List<Fine>> getFines() => remoteDataSource.getFines();
+
   @override
-  Future<bool> payFine(int id, String method, double amount) => remoteDataSource.payFine(id, method, amount);
+  Future<void> payFine(int id, String method) => remoteDataSource.payFine(id, method);
 }
 
 class ReviewRepositoryImpl implements ReviewRepository {

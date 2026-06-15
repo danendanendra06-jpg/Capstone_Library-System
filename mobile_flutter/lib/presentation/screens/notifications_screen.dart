@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../domain/repositories.dart';
 import '../../domain/entities.dart' as entity; // Alias to avoid collision with Flutter's Notification
+import 'fines_screen.dart';
 
 class NotificationsScreen extends StatelessWidget {
   @override
@@ -40,6 +41,12 @@ class NotificationsScreen extends StatelessWidget {
                   title: Text(notif.title, style: TextStyle(fontWeight: notif.isRead ? FontWeight.normal : FontWeight.bold)),
                   subtitle: Text(notif.message),
                   trailing: Text(notif.sentAt.split('T')[0], style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  onTap: () {
+                    // Navigate to fines screen if the notification is about fines
+                    if (notif.message.toLowerCase().contains('fine') || notif.message.toLowerCase().contains('pembayaran') || notif.message.toLowerCase().contains('denda')) {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => FinesScreen()));
+                    }
+                  },
                 ),
               );
             },

@@ -31,7 +31,7 @@ abstract class NotificationRepository {
 
 abstract class FineRepository {
   Future<List<Fine>> getFines();
-  Future<bool> payFine(int id, String method, double amount);
+  Future<void> payFine(int id, String method);
 }
 
 abstract class ReviewRepository {

@@ -25,6 +25,9 @@ public class Fine {
     @Column(name = "payment_status")
     private String paymentStatus = "UNPAID"; // UNPAID, PAID
 
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
     private BigDecimal amount;
     private String reason;
 
@@ -42,4 +45,6 @@ public class Fine {
     public void setFineType(String fineType) { this.fineType = fineType; }
     public String getPaymentStatus() { return paymentStatus; }
     public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public String getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
 }

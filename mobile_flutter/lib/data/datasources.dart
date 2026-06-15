@@ -77,6 +77,15 @@ class RemoteDataSource {
     await apiClient.dio.post(ApiConstants.borrow, data: payload);
   }
 
+  Future<List<FineModel>> getFines() async {
+    final response = await apiClient.dio.get('/fines');
+    return (response.data['content'] as List).map((x) => FineModel.fromJson(x)).toList();
+  }
+
+  Future<void> payFine(int id, String method) async {
+    await apiClient.dio.post('/fines/$id/pay', data: {'method': method, 'amountPaid': 999999999});
+  }
+
   Future<List<BorrowModel>> getBorrows() async {
     final response = await apiClient.dio.get(ApiConstants.borrows);
     return (response.data as List).map((x) => BorrowModel.fromJson(x)).toList();

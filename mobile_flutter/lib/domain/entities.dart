@@ -95,18 +95,20 @@ class Review {
 
 class Fine {
   final int id;
+  final int borrowId;
   final double amount;
   final String reason;
   final bool isPaid;
   final String? fineType;
-  final String? paymentStatus;
+  final String? paymentMethod;
 
   Fine({
-    required this.id, 
-    required this.amount, 
-    required this.reason, 
+    required this.id,
+    required this.borrowId,
+    required this.amount,
+    required this.reason,
     required this.isPaid,
     this.fineType,
-    this.paymentStatus,
+    this.paymentMethod,
   });
 }

@@ -23,6 +23,59 @@ class _FinesScreenState extends State<FinesScreen> {
     });
   }
 
+  void _showPaymentDialog(BuildContext context, Fine fine) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Pilih Metode Pembayaran', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              SizedBox(height: 16),
+              ListTile(
+                leading: Icon(Icons.account_balance_wallet, color: Colors.blue),
+                title: Text('DANA'),
+                onTap: () => _processPayment(context, fine.id, 'DANA'),
+              ),
+              ListTile(
+                leading: Icon(Icons.account_balance_wallet, color: Colors.green),
+                title: Text('GoPay'),
+                onTap: () => _processPayment(context, fine.id, 'GOPAY'),
+              ),
+              ListTile(
+                leading: Icon(Icons.credit_card, color: Colors.orange),
+                title: Text('Kartu ATM / Debit'),
+                onTap: () => _processPayment(context, fine.id, 'ATM'),
+              ),
+            ],
+          ),
+        );
+      }
+    );
+  }
+
+  void _processPayment(BuildContext context, int fineId, String method) async {
+    Navigator.pop(context); // close modal
+    showDialog(context: context, barrierDismissible: false, builder: (_) => Center(child: CircularProgressIndicator()));
+    try {
+      await Provider.of<FineRepository>(context, listen: false).payFine(fineId, method);
+      Navigator.pop(context); // close loading
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Pembayaran berhasil melalui $method!'), backgroundColor: Colors.green));
+        _loadFines();
+      }
+    } catch (e) {
+      Navigator.pop(context); // close loading
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Gagal memproses pembayaran'), backgroundColor: Colors.red));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +127,28 @@ class _FinesScreenState extends State<FinesScreen> {
                       Text('Amount: Rp ${fine.amount.toStringAsFixed(0)}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
                       SizedBox(height: 4),
                       Text('Reason: ${fine.reason}', style: TextStyle(fontSize: 14, color: Colors.grey[700])),
-                      SizedBox(height: 16),
+                      if (fine.paymentMethod != null) ...[
+                        SizedBox(height: 4),
+                        Text('Method: ${fine.paymentMethod}', style: TextStyle(fontSize: 14, color: Colors.blue[700], fontWeight: FontWeight.bold)),
+                      ],
+                      if (!fine.isPaid) ...[
+                        SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () => _showPaymentDialog(context, fine),
+                            child: Text('Pay Now'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue[600],
+                              foregroundColor: Colors.white,
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                          ),
+                        )
+                      ] else ...[
+                        SizedBox(height: 16),
+                      ],
                     ],
                   ),
                 ),

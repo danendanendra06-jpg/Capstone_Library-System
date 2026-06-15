@@ -78,15 +78,16 @@ public class FineController {
             }
             java.math.BigDecimal change = request.amountPaid.subtract(fine.getAmount());
             fine.setPaymentStatus("PAID");
+            fine.setPaymentMethod("CASH");
             service.save(fine);
             String msg = change.compareTo(java.math.BigDecimal.ZERO) == 0 ? "Exact amount received." : "Payment successful. Change returned: " + change;
             return ResponseEntity.ok(new PaymentResponse(true, change, msg));
-        } else if ("CARD".equalsIgnoreCase(request.method)) {
+        } else {
             fine.setPaymentStatus("PAID");
+            fine.setPaymentMethod(request.method);
             service.save(fine);
-            return ResponseEntity.ok(new PaymentResponse(true, java.math.BigDecimal.ZERO, "Card payment processed successfully."));
+            return ResponseEntity.ok(new PaymentResponse(true, java.math.BigDecimal.ZERO, request.method + " payment processed successfully."));
         }
-        return ResponseEntity.badRequest().body(new PaymentResponse(false, null, "Invalid payment method."));
     }
 
     public static class PaymentRequest {
