@@ -110,9 +110,6 @@ class CartScreen extends StatelessWidget {
                             ),
                             onPressed: () {
                               final now = DateTime.now();
-                              final due = now.add(Duration(days: 14));
-                              final strNow = '${now.day} ${_getMonthName(now.month)} ${now.year}';
-                              final strDue = '${due.day} ${_getMonthName(due.month)} ${due.year}';
 
                               showDialog(
                                 context: context,
