@@ -49,6 +49,12 @@
                         <th class="text-muted">Reason</th>
                         <td><?= esc($fine['reason']) ?></td>
                     </tr>
+                    <?php if($fine['payment_status'] === 'PAID' && !empty($fine['payment_method'])): ?>
+                    <tr>
+                        <th class="text-muted">Payment Method</th>
+                        <td><span class="badge bg-secondary"><?= esc($fine['payment_method']) ?></span></td>
+                    </tr>
+                    <?php endif; ?>
                 </table>
                 <hr>
                 <div class="text-center">

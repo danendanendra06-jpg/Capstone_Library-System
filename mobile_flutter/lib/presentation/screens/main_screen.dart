@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers.dart';
 import 'home_screen.dart';
-import 'search_screen.dart';
+
 import 'cart_screen.dart';
 import 'borrows_screen.dart';
 import 'profile_screen.dart';

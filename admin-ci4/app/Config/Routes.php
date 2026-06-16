@@ -9,7 +9,7 @@ $routes->get('/dashboard', 'Admin::index', ['filter' => 'auth:admin']);
 
 // Auth Routes
 $routes->match(['GET', 'POST'], '/login', 'Auth::login');
-$routes->get('/logout', 'Auth::logout');
+$routes->post('/logout', 'Auth::logout');
 
 // CRUD Routes for Admin
 $routes->group('', ['filter' => 'auth:admin'], static function($routes) {

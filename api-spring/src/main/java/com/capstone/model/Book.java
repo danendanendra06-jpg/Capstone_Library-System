@@ -15,15 +15,12 @@ public class Book {
     @Column(nullable = false)
     private String author;
 
+    @Column(unique = true)
     private String isbn;
     private String publisher;
     private Integer publicationYear;
     
-    @Column(name = "shelf_location")
-    private String shelfLocation;
-    
-    private Double price;
-    
+
     private Integer totalCopies;
     @Column(name = "stock")
     private Integer availableCopies;
@@ -48,10 +45,6 @@ public class Book {
     public void setPublisher(String publisher) { this.publisher = publisher; }
     public Integer getPublicationYear() { return publicationYear; }
     public void setPublicationYear(Integer publicationYear) { this.publicationYear = publicationYear; }
-    public String getShelfLocation() { return shelfLocation; }
-    public void setShelfLocation(String shelfLocation) { this.shelfLocation = shelfLocation; }
-    public Double getPrice() { return price; }
-    public void setPrice(Double price) { this.price = price; }
     public Integer getTotalCopies() { return totalCopies; }
     public void setTotalCopies(Integer totalCopies) { this.totalCopies = totalCopies; }
     public Integer getAvailableCopies() { return availableCopies; }

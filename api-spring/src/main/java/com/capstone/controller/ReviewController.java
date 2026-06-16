@@ -28,9 +28,46 @@ public class ReviewController {
         return ResponseEntity.ok(service.getById(id));
     }
 
+    @Autowired
+    private com.capstone.service.BookService bookService;
+
+    @Autowired
+    private com.capstone.repository.UserRepository userRepo;
+
+    private com.capstone.model.User getCurrentUser() {
+        Object principal = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof org.springframework.security.core.userdetails.UserDetails) {
+            String username = ((org.springframework.security.core.userdetails.UserDetails) principal).getUsername();
+            return userRepo.findByUsername(username).orElse(null);
+        }
+        return null;
+    }
+
+    public static class ReviewRequest {
+        public Long bookId;
+        public Integer rating;
+        public String comment;
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Review> create(@RequestBody Review review) {
+    public ResponseEntity<?> create(@RequestBody ReviewRequest req) {
+        com.capstone.model.User user = getCurrentUser();
+        if (user == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+        
+        com.capstone.model.Book book = bookService.getById(req.bookId);
+        if (book == null) {
+            return ResponseEntity.badRequest().body("Book not found");
+        }
+
+        Review review = new Review();
+        review.setRating(req.rating);
+        review.setComment(req.comment);
+        review.setUser(user);
+        review.setBook(book);
+
         return ResponseEntity.ok(service.save(review));
     }
 

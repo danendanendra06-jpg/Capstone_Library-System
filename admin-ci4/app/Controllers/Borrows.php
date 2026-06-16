@@ -259,7 +259,7 @@ class Borrows extends BaseController
                 $notifModel->save([
                     'user_id' => $borrow['user_id'],
                     'title'   => 'Fine Issued',
-                    'message' => 'You have been issued fines totaling Rp' . number_format($totalFine, 0, ',', '.') . '. Silakan lakukan pembayaran melalui Cash, Kartu ATM, atau Digital (DANA, GoPay, dll) di meja admin.',
+                    'message' => 'You have been issued fines totaling Rp' . number_format($totalFine, 0, ',', '.'),
                     'is_read' => 0,
                     'sent_at' => date('Y-m-d H:i:s')
                 ]);

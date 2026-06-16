@@ -89,13 +89,41 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen()));
               },
             ),
-            ListTile(
+            ExpansionTile(
               leading: Icon(Icons.category_outlined),
               title: Text('Categories'),
-              onTap: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please use the category dropdown on the home screen.')));
-              },
+              children: [
+                ListTile(
+                  title: Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: Text('Semua Kategori'),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      _selectedCategoryId = null;
+                      _isSearching = false;
+                      _searchCtrl.clear();
+                    });
+                    Provider.of<BookProvider>(context, listen: false).loadBooks(categoryId: null);
+                  },
+                ),
+                ..._categories.map((c) => ListTile(
+                  title: Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: Text(c.name),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      _selectedCategoryId = c.id;
+                      _isSearching = false;
+                      _searchCtrl.clear();
+                    });
+                    Provider.of<BookProvider>(context, listen: false).loadBooks(categoryId: c.id);
+                  },
+                )).toList(),
+              ],
             ),
             ListTile(
               leading: Icon(Icons.history),
@@ -203,36 +231,46 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           SizedBox(height: 16),
                           if (_categories.isNotEmpty)
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<int?>(
-                                  isExpanded: true,
-                                  value: _selectedCategoryId,
-                                  hint: Text('Semua Kategori'),
-                                  items: [
-                                    DropdownMenuItem<int?>(
-                                      value: null,
-                                      child: Text('Semua Kategori'),
+                            SizedBox(
+                              height: 40,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: ChoiceChip(
+                                      label: Text('Semua Kategori'),
+                                      selected: _selectedCategoryId == null,
+                                      onSelected: (selected) {
+                                        if (selected) {
+                                          setState(() {
+                                            _selectedCategoryId = null;
+                                            _isSearching = false;
+                                            _searchCtrl.clear();
+                                          });
+                                          bookProvider.loadBooks(categoryId: null);
+                                        }
+                                      },
                                     ),
-                                    ..._categories.map((c) => DropdownMenuItem<int?>(
-                                      value: c.id,
-                                      child: Text(c.name),
-                                    ))
-                                  ],
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _selectedCategoryId = val;
-                                      _isSearching = false;
-                                      _searchCtrl.clear();
-                                    });
-                                    bookProvider.loadBooks(categoryId: val);
-                                  },
-                                ),
+                                  ),
+                                  ..._categories.map((c) => Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: ChoiceChip(
+                                      label: Text(c.name),
+                                      selected: _selectedCategoryId == c.id,
+                                      onSelected: (selected) {
+                                        if (selected) {
+                                          setState(() {
+                                            _selectedCategoryId = c.id;
+                                            _isSearching = false;
+                                            _searchCtrl.clear();
+                                          });
+                                          bookProvider.loadBooks(categoryId: c.id);
+                                        }
+                                      },
+                                    ),
+                                  )).toList(),
+                                ],
                               ),
                             ),
                           SizedBox(height: 24),

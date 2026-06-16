@@ -48,6 +48,22 @@ public class NotificationController {
         return ResponseEntity.ok(service.save(notification));
     }
 
+    @PutMapping("/{id}/read")
+    public ResponseEntity<?> markAsRead(@PathVariable Long id) {
+        Notification notification = service.getById(id);
+        if (notification == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        com.capstone.model.User user = getCurrentUser();
+        if (user != null && !notification.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(403).body("You do not have permission to read this notification.");
+        }
+
+        notification.setIsRead(true);
+        return ResponseEntity.ok(service.save(notification));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Notification> update(@PathVariable Long id, @RequestBody Notification notification) {
         Notification existing = service.getById(id);

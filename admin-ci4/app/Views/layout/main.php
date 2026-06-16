@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Tom Select (Searchable Dropdowns) -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <style>
         body { 
             font-family: 'Poppins', sans-serif; 
@@ -162,9 +165,12 @@
                 <i class="bi bi-wallet2"></i> Fines
             </a>
             <div class="mt-5 mb-3 px-3">
-                <a href="<?= base_url('logout') ?>" class="text-danger bg-danger bg-opacity-10 justify-content-center py-2">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </a>
+                <form action="<?= base_url('logout') ?>" method="post" style="margin: 0 15px 8px 15px;">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn text-danger bg-danger bg-opacity-10 justify-content-center py-2 w-100" style="display: flex; align-items: center; border-radius: 12px; font-weight: 500; border: none; text-decoration: none;">
+                        <i class="bi bi-box-arrow-right" style="margin-right: 15px; font-size: 1.2rem;"></i> Logout
+                    </button>
+                </form>
             </div>
         </nav>
     </div>
@@ -210,6 +216,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?= base_url('js/autocomplete.js') ?>"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.searchable-dropdown').forEach((el) => {
+                new TomSelect(el, {
+                    create: false,
+                    sortField: {
+                        field: "text",
+                        direction: "asc"
+                    }
+                });
+            });
+        });
+    </script>
     <?= $this->renderSection('scripts') ?>
 </body>
 </html>

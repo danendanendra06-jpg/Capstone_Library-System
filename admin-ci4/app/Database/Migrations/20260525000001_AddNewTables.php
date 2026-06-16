@@ -52,9 +52,11 @@ class AddNewTables extends Migration
             'id' => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'user_id' => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true],
             'borrow_id' => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true],
-            'fine_amount' => ['type' => 'DECIMAL', 'constraint' => '10,2'],
+            'amount' => ['type' => 'DECIMAL', 'constraint' => '10,2'],
             'reason' => ['type' => 'VARCHAR', 'constraint' => '255', 'null' => true],
-            'status' => ['type' => 'ENUM', 'constraint' => ['unpaid', 'paid'], 'default' => 'unpaid'],
+            'fine_type' => ['type' => 'VARCHAR', 'constraint' => '50', 'null' => true],
+            'payment_status' => ['type' => 'ENUM', 'constraint' => ['UNPAID', 'PAID'], 'default' => 'UNPAID'],
+            'payment_method' => ['type' => 'VARCHAR', 'constraint' => '50', 'null' => true],
             'created_at' => ['type' => 'DATETIME', 'null' => true],
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ]);

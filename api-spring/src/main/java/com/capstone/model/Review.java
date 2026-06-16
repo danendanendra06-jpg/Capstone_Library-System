@@ -11,6 +11,8 @@ public class Review {
     private Long id;
 
     private Integer rating;
+
+    @Column(name = "review_text")
     private String comment;
 
     @ManyToOne
@@ -21,6 +23,7 @@ public class Review {
     @JoinColumn(name = "book_id")
     private Book book;
 
+    @Column(name = "created_at")
     private Date reviewDate;
 
     @PrePersist

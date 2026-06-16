@@ -25,8 +25,6 @@ class BookModel extends Book {
     super.isbn,
     super.publisher,
     super.publicationYear,
-    super.shelfLocation,
-    super.price,
   });
 
   factory BookModel.fromJson(Map<String, dynamic> json) {
@@ -43,8 +41,6 @@ class BookModel extends Book {
       isbn: json['isbn'],
       publisher: json['publisher'],
       publicationYear: json['publicationYear'] ?? json['publication_year'],
-      shelfLocation: json['shelfLocation'] ?? json['shelf_location'],
-      price: json['price'] != null ? (json['price'] as num).toDouble() : null,
     );
   }
 }

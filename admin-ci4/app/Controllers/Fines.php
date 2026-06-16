@@ -75,8 +75,10 @@ class Fines extends BaseController
                 }
                 $change = $amountReceived - $fine['amount'];
             }
-
-            $this->fineModel->update($id, ['payment_status' => 'PAID']);
+            $this->fineModel->update($id, [
+                'payment_status' => 'PAID',
+                'payment_method' => $method
+            ]);
             
             // Add audit log
             $auditModel = new \App\Models\AuditLogModel();
@@ -103,8 +105,10 @@ class Fines extends BaseController
             if (!$fine) {
                 return redirect()->to('/fines')->with('error', 'Fine not found.');
             }
-
-            $this->fineModel->update($id, ['payment_status' => 'UNPAID']);
+            $this->fineModel->update($id, [
+                'payment_status' => 'UNPAID',
+                'payment_method' => null
+            ]);
             
             // Add audit log
             $auditModel = new \App\Models\AuditLogModel();

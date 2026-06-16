@@ -32,7 +32,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <label class="form-label">Category</label>
-                    <select name="category_id" class="form-select" required>
+                    <select name="category_id" class="form-select searchable-dropdown" required>
                         <option value="">Select Category...</option>
                         <?php foreach($categories as $cat): ?>
                             <option value="<?= $cat['id'] ?>" <?= old('category_id', $book['category_id'] ?? '') == $cat['id'] ? 'selected' : '' ?>>

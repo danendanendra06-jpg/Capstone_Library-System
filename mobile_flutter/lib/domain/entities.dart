@@ -18,8 +18,6 @@ class Book {
   final String? isbn;
   final String? publisher;
   final int? publicationYear;
-  final String? shelfLocation;
-  final double? price;
 
   Book({
     required this.id,
@@ -33,8 +31,6 @@ class Book {
     this.isbn,
     this.publisher,
     this.publicationYear,
-    this.shelfLocation,
-    this.price,
   });
 }
 

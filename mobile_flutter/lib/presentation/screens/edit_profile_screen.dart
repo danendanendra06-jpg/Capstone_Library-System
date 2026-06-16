@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
-import '../../data/datasources.dart';
+
+import '../../core/constants.dart';
 import '../providers.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _updateProfile() async {
     setState(() => _isLoading = true);
     try {
-      final dio = Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8080/api'));
+      final dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
       final auth = Provider.of<AuthProvider>(context, listen: false);
       final token = await auth.getToken();
       if (token == null) throw Exception("Unauthorized");

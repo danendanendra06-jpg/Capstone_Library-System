@@ -16,7 +16,7 @@
         <form action="<?= base_url('borrows/new') ?>" method="post">
             <div class="mb-3">
                 <label>Member</label>
-                <select name="user_id" class="form-select" required>
+                <select name="user_id" class="form-select searchable-dropdown" required>
                     <option value="">-- Select Member --</option>
                     <?php foreach($users as $user): ?>
                         <option value="<?= $user['id'] ?>" <?= set_select('user_id', $user['id']) ?>><?= esc($user['username']) ?> (<?= esc($user['email']) ?>)</option>
@@ -25,7 +25,7 @@
             </div>
             <div class="mb-3">
                 <label>Book</label>
-                <select name="book_id" class="form-select" required>
+                <select name="book_id" class="form-select searchable-dropdown" required>
                     <option value="">-- Select Book --</option>
                     <?php foreach($books as $book): ?>
                         <option value="<?= $book['id'] ?>" <?= set_select('book_id', $book['id']) ?>><?= esc($book['title']) ?> (Stock: <?= $book['stock'] ?>)</option>
@@ -47,4 +47,18 @@
         </form>
     </div>
 </div>
+
+<script>
+    const borrowDateInput = document.querySelector('input[name="borrow_date"]');
+    const dueDateInput = document.querySelector('input[name="due_date"]');
+
+    function updateDueDateMin() {
+        dueDateInput.min = borrowDateInput.value;
+    }
+
+    borrowDateInput.addEventListener('change', updateDueDateMin);
+    // Initialize on page load
+    updateDueDateMin();
+</script>
+
 <?= $this->endSection() ?>

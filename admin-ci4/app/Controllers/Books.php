@@ -84,6 +84,13 @@ class Books extends BaseController
                     'regex_match' => 'ISBN must be in xxx-xxx-xxx-xxx format.'
                 ]
             ],
+            'publication_year' => [
+                'rules' => 'required|numeric|exact_length[4]',
+                'errors' => [
+                    'exact_length' => 'Publication Year must be exactly 4 digits.',
+                    'numeric' => 'Publication Year must contain only numbers.'
+                ]
+            ],
             'stock' => 'required|integer',
         ];
 
@@ -129,6 +136,13 @@ class Books extends BaseController
                 'errors' => [
                     'is_unique' => 'This ISBN is already registered.',
                     'regex_match' => 'ISBN must be in xxx-xxx-xxx-xxx format.'
+                ]
+            ],
+            'publication_year' => [
+                'rules' => 'required|numeric|exact_length[4]',
+                'errors' => [
+                    'exact_length' => 'Publication Year must be exactly 4 digits.',
+                    'numeric' => 'Publication Year must contain only numbers.'
                 ]
             ],
             'stock' => 'required|integer',

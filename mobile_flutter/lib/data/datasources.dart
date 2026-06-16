@@ -6,7 +6,7 @@ import 'models.dart';
 class ApiClient {
   final Dio dio;
   
-  ApiClient() : dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl)) {
+  ApiClient() : dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl, connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 10))) {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         final prefs = await SharedPreferences.getInstance();
@@ -15,6 +15,15 @@ class ApiClient {
           options.headers['Authorization'] = 'Bearer $token';
         }
         return handler.next(options);
+      },
+      onError: (DioException e, handler) {
+        if (e.type == DioExceptionType.connectionTimeout || e.type == DioExceptionType.receiveTimeout) {
+          return handler.reject(DioException(requestOptions: e.requestOptions, error: 'Koneksi timeout, periksa jaringan Anda.'));
+        }
+        if (e.type == DioExceptionType.connectionError || e.message?.contains('SocketException') == true) {
+          return handler.reject(DioException(requestOptions: e.requestOptions, error: 'Anda sedang offline.'));
+        }
+        return handler.next(e);
       },
     ));
   }

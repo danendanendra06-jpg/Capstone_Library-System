@@ -61,7 +61,19 @@ class CartScreen extends StatelessWidget {
                           subtitle: Text(book.author, style: TextStyle(color: Colors.grey[600])),
                           trailing: IconButton(
                             icon: Icon(Icons.remove_circle_outline, color: Colors.red[300]),
-                            onPressed: () => cart.removeFromCart(book),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: Text('Konfirmasi'),
+                                  content: Text('Hapus buku ini dari keranjang?'),
+                                  actions: [
+                                    TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Batal')),
+                                    TextButton(onPressed: () { Navigator.pop(ctx); cart.removeFromCart(book); }, child: Text('Hapus', style: TextStyle(color: Colors.red))),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         ),
                       );

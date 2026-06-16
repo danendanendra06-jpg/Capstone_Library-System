@@ -120,6 +120,15 @@
             box-shadow: 0 6px 12px rgba(118, 75, 162, 0.4);
             color: white;
         }
+    @media (max-width: 1024px) and (orientation: landscape) {
+        .glass-card {
+            max-width: 100%;
+            margin: 20px;
+        }
+    }
+    img {
+        -webkit-object-fit: contain;
+    }
     </style>
 </head>
 <body>
@@ -155,6 +164,7 @@
         <?php endif; ?>
 
         <form action="<?= base_url('login') ?>" method="post">
+            <?= csrf_field() ?>
             <div class="mb-4 position-relative">
                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                 <input type="email" name="email" class="form-control" placeholder="Email Address" required value="<?= set_value('email') ?>">
